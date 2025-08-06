@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// model Job {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   title       String
+//   description String
+//   location    String
+//   salary      Float
+//   employment_Type String @default("Full-time")
+//   job_type   String @default("on-site")
+// }
+model Jobs {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  location        String
+  salary          Float
+  employment_Type String @default("Full-time")
+  job_type        String @default("on-site")
+}
+
+model User {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  email        String         @unique
+  password     String
+  role         String?
+  company      Company?
+  review       Review[]
+  Applications Applications[]
+  SavedJobs    SavedJobs[]
+}
+
+model Company {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  ownerId     String     @unique @db.ObjectId
+  owner       User       @relation(fields: [ownerId], references: [id])
+  jobs        Openings[]
+}
+
+model Openings {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  location        String
+  salary          Float
+  employment_Type String  @default("Full-time")
+  job_type        String  @default("on-site")
+  companyId       String  @db.ObjectId
+  company         Company @relation(fields: [companyId], references: [id])
+}
+
+model Review {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  user_id    String @db.ObjectId
+  user       User   @relation(fields: [user_id], references: [id])
+  company_id String
+}
+
+model Applications {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id String @db.ObjectId
+  user    User   @relation(fields: [user_id], references: [id])
+  job_id  String
+}
+
+model SavedJobs {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id String @db.ObjectId
+  user    User   @relation(fields: [user_id], references: [id])
+  job_id  String
+}
