@@ -8,19 +8,31 @@ export default function DeleteBtn({job}){
     const {user}= useContext(userContext)
 
     async function handleDelete(){
+        if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
+            return;
+        }
+
         try{
-            const res = await fetch("/api/job/" + job.id , {
+            console.log('Deleting job:', job.id);
+            
+            const res = await fetch("/api/job/" + job.id, {
                 method: "DELETE"
-            }
-            )
-            const data = await res.json()
+            });
+            
+            console.log('Delete response status:', res.status);
+            const data = await res.json();
+            console.log('Delete response data:', data);
+            
             if(data.success){
-                alert("Job deleted successfully")
-            } else{
-                alert("Something went wrong")
+                alert("Job deleted successfully!");
+                // Refresh the page to update the job list
+                window.location.reload();
+            } else {
+                alert(`Failed to delete job: ${data.message || 'Unknown error'}`);
             }
-        } catch (err){
-            alert("Something went wrong in code")
+        } catch (error){
+            console.error('Error deleting job:', error);
+            alert("Network error occurred while deleting job");
         }
     }   
 
