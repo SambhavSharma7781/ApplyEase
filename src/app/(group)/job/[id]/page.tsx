@@ -8,25 +8,33 @@ import { Button, Flex, Badge } from "@radix-ui/themes";
 import { MapPin, Building2, Clock, DollarSign, Users, ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getUserFromCookies } from "@/helper";
+import prismaClient from "@/services/prisma";
 
 // Make this page dynamic to avoid build-time fetch issues
 export const dynamic = 'force-dynamic';
-import { getUserFromCookies } from "@/helper";
-import prismaClient from "@/services/prisma";
 
 export default async function JobPage({params}){
     const { id } = await params;
     
-    // Fetch job details
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/job/${id}`);
-    const data = await res.json();
+    try {
+        // Direct database call instead of API fetch
+        const job = await prismaClient.openings.findUnique({
+            where: { id },
+            include: {
+                company: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true
+                    }
+                }
+            }
+        });
 
-    if(!data?.success){
-        notFound() 
-    }
-
-    const job = data.job;
+        if(!job){
+            notFound();
+        }
     
     // Check if user has already applied
     const user = await getUserFromCookies();
@@ -183,4 +191,28 @@ export default async function JobPage({params}){
             </div>
         </div>
     );
+    } catch (error) {
+        console.error('Error loading job:', error);
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v6a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Job</h2>
+                    <p className="text-gray-600 mb-4">
+                        There was an error loading the job details.
+                    </p>
+                    <Link 
+                        href="/"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Back to Jobs
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 }

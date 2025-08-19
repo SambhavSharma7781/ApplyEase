@@ -6,15 +6,51 @@ import prismaClient from "@/services/prisma";
 // Make this page dynamic to avoid build-time fetch issues
 export const dynamic = 'force-dynamic';
 
-export default async function Search({ searchParams }) {
-    const q = searchParams.q || "";
-    const jt = searchParams.jt || ""; 
-    const et = searchParams.et || ""; 
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string; jt?: string; et?: string }> }) {
+    const searchParamsData = await searchParams;
+    const q = searchParamsData.q || "";
+    const jt = searchParamsData.jt || ""; 
+    const et = searchParamsData.et || ""; 
 
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/search?q=${q}&jt=${jt}&et=${et}`);
-    const data = await res.json();
-    const jobss = data.jobs || [];
+    let jobss: any[] = [];
+
+    try {
+        // Direct database search instead of API call
+        const jobs = await prismaClient.openings.findMany({
+            where: {
+                ...(q && {
+                    OR: [
+                        { title: { contains: q, mode: 'insensitive' } },
+                        { description: { contains: q, mode: 'insensitive' } },
+                        { location: { contains: q, mode: 'insensitive' } }
+                    ]
+                }),
+                ...(jt && { job_type: jt }),
+                ...(et && { employment_Type: et })
+            },
+            include: {
+                company: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true
+                    }
+                }
+            }
+        });
+
+        jobss = jobs.map(job => ({
+            ...job,
+            company: {
+                id: job.company.id,
+                name: job.company.name,
+                address: job.location
+            }
+        }));
+    } catch (error) {
+        console.error('Error searching jobs:', error);
+        jobss = [];
+    }
 
     return (
         <div className="flex-1 min-h-screen">
