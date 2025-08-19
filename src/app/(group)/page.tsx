@@ -8,8 +8,14 @@ import { Plus } from "lucide-react";
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/search`);
+  // Fix URL for Vercel deployment
+  const baseUrl = process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  
+  const res = await fetch(`${baseUrl}/api/search`, {
+    cache: 'no-store' // Prevent caching issues
+  });
   const data = await res.json();
   const jobs: (Jobs & {
     company: {

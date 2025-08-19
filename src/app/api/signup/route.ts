@@ -19,8 +19,19 @@ export async function POST(request: NextRequest) {
         }
 
         const token = generateToken(userTokenData)
-        const res = NextResponse.redirect("http://localhost:3000");
-        res.cookies.set('token' ,token)
+        
+        // Success response instead of redirect
+        const res = NextResponse.json({
+            success: true,
+            message: "User created successfully",
+            user: { id: user.id, email: user.email }
+        });
+        res.cookies.set('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 7 // 7 days
+        });
 
         return res;
 

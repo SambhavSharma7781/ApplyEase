@@ -24,7 +24,7 @@ export default function DeleteBtn({job}){
         }
     }   
 
-    if(user?.company.id == job?.company.id){
+    if(user?.company?.id === job?.company?.id){
         return(
             <div className="flex gap-2.5">
                 <Button color="red" onClick={handleDelete}>Delete</Button>

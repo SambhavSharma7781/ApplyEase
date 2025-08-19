@@ -19,6 +19,38 @@ export default function AddJobPage() {
   const [loading, setLoading] = React.useState(false);
   const { user } = React.useContext(userContext);
 
+  // Check if user has a company
+  if (!user?.company) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center p-8 bg-white rounded-lg shadow-md">
+          <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Company Required</h2>
+          <p className="text-gray-600 mb-6">
+            You need to create a company first before you can post jobs. 
+            Only company owners can add job listings.
+          </p>
+          <div className="space-y-3">
+            <Link 
+              href="/company" 
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              <Building2 size={16} />
+              Create Company
+            </Link>
+            <Link 
+              href="/" 
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+            >
+              <ArrowLeft size={16} />
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setLoading(true);
@@ -31,7 +63,7 @@ export default function AddJobPage() {
       salary: salaryNum,
       employment_Type: employmentType,
       job_type: jobType,
-      companyId: user.company.id
+      companyId: user?.company?.id
     };
 
     const res = await fetch("http://localhost:3000/api/jobs", {
