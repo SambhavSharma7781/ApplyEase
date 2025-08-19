@@ -2,6 +2,9 @@ import prismaClient from "@/services/prisma"
 import Link from "next/link"
 import { Building2, Mail, MapPin, Users } from "lucide-react"
 
+// Make this page dynamic to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+
 export default async function Page(){
     const companies = await prismaClient.company.findMany({
         include:{

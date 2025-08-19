@@ -11,24 +11,34 @@ export const dynamic = 'force-dynamic';
 export default async function CompanyIDPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
-    const company = await prismaClient.company.findUnique({
-        where: {
-            id: id,
-        },
-        include: {
-            owner: true,
-            jobs: true
-        },
-    });
-    
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/review/${id}`);
-    const data = await res.json();
-    const reviews = await data.data;
+    try {
+        const company = await prismaClient.company.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                owner: true,
+                jobs: true
+            },
+        });
 
-    if (!company) {
-        notFound();
-    }
+        // Get reviews directly from database
+        const reviews = await prismaClient.review.findMany({
+            where: {
+                company_id: id
+            },
+            include: {
+                user: {
+                    select: {
+                        email: true
+                    }
+                }
+            }
+        });
+
+        if (!company) {
+            notFound();
+        }
 
     // Type assertion to help TypeScript understand the included relations
     const companyWithRelations = company as typeof company & {
@@ -156,4 +166,25 @@ export default async function CompanyIDPage({ params }: { params: Promise<{ id: 
             </div>
         </div>
     );
+    } catch (error) {
+        console.error('Error loading company:', error);
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Company</h2>
+                    <p className="text-gray-600 mb-4">
+                        There was an error loading the company information.
+                    </p>
+                    <Link 
+                        href="/company"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        <ArrowLeft size={16} />
+                        Back to Companies
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 }
