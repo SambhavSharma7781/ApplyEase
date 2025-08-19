@@ -9,9 +9,17 @@ import { MapPin, Building2, Clock, DollarSign, Users, ArrowLeft } from "lucide-r
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
+// Make this page dynamic to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+import { getUserFromCookies } from "@/helper";
+import prismaClient from "@/services/prisma";
+
 export default async function JobPage({params}){
     const { id } = params;
-    const res = await fetch(`http://localhost:3000/api/job/${id}`);
+    
+    // Fetch job details
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/job/${id}`);
     const data = await res.json();
 
     if(!data?.success){
@@ -19,6 +27,29 @@ export default async function JobPage({params}){
     }
 
     const job = data.job;
+    
+    // Check if user has already applied
+    const user = await getUserFromCookies();
+    let userHasApplied = false;
+    
+    if (user) {
+        const application = await prismaClient.applications.findMany({
+            where: {
+                job_id: id,
+                user_id: user.id
+            }
+        });
+        
+        if(application.length > 0){
+            userHasApplied = true;
+        }
+    }
+    
+    // Add userHasApplied to job object
+    const jobWithApplicationStatus = {
+        ...job,
+        userHasApplied: userHasApplied
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -40,26 +71,26 @@ export default async function JobPage({params}){
                         {/* Job Title and Company */}
                         <div className="mb-6">
                             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                                {job.title}
+                                {jobWithApplicationStatus.title}
                             </h1>
                             
                             {/* Company Info */}
                             <div className="flex items-center gap-4 mb-4">
                                 <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-medium">
-                                        {job.company?.name?.charAt(0)?.toUpperCase() || 'C'}
+                                        {jobWithApplicationStatus.company?.name?.charAt(0)?.toUpperCase() || 'C'}
                                     </div>
                                     <div>
                                         <Link 
-                                            href={`/company/${job.company?.id}`}
+                                            href={`/company/${jobWithApplicationStatus.company?.id}`}
                                             className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                                         >
-                                            {job.company?.name || 'Company Name'}
+                                            {jobWithApplicationStatus.company?.name || 'Company Name'}
                                         </Link>
-                                        {job.company?.address && (
+                                        {jobWithApplicationStatus.company?.address && (
                                             <div className="flex items-center gap-1 mt-1">
                                                 <MapPin size={14} className="text-gray-400" />
-                                                <span className="text-sm text-gray-600">{job.company.address}</span>
+                                                <span className="text-sm text-gray-600">{jobWithApplicationStatus.company.address}</span>
                                             </div>
                                         )}
                                     </div>
@@ -68,22 +99,22 @@ export default async function JobPage({params}){
 
                             {/* Job Meta Information */}
                             <div className="flex flex-wrap gap-3 mb-6">
-                                {job.jobType && (
+                                {jobWithApplicationStatus.jobType && (
                                     <Badge variant="soft" color="blue" className="px-3 py-1">
                                         <Building2 size={14} className="mr-1" />
-                                        {job.jobType}
+                                        {jobWithApplicationStatus.jobType}
                                     </Badge>
                                 )}
-                                {job.employmentType && (
+                                {jobWithApplicationStatus.employmentType && (
                                     <Badge variant="soft" color="green" className="px-3 py-1">
                                         <Clock size={14} className="mr-1" />
-                                        {job.employmentType}
+                                        {jobWithApplicationStatus.employmentType}
                                     </Badge>
                                 )}
-                                {job.salary && (
+                                {jobWithApplicationStatus.salary && (
                                     <Badge variant="soft" color="orange" className="px-3 py-1">
                                         <span className="mr-1">₹</span>
-                                        {job.salary}
+                                        {jobWithApplicationStatus.salary}
                                     </Badge>
                                 )}
                             </div>
@@ -92,10 +123,10 @@ export default async function JobPage({params}){
                         {/* Action Buttons */}
                         <div className="border-t border-gray-100 pt-6">
                             <Flex gap="3" wrap="wrap" className="justify-start">
-                                <JobApplyButton job={job} />
-                                <ViewJobApplicants job={job} />
-                                <EditBtn job={job} />
-                                <DeleteBtn job={job} />
+                                <JobApplyButton job={jobWithApplicationStatus} showDeleteButton={true} />
+                                <ViewJobApplicants job={jobWithApplicationStatus} />
+                                <EditBtn job={jobWithApplicationStatus} />
+                                <DeleteBtn job={jobWithApplicationStatus} />
                             </Flex>
                         </div>
                     </div>
@@ -110,7 +141,7 @@ export default async function JobPage({params}){
                             </h2>
                             <div className="prose prose-gray max-w-none">
                                 <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                    {job.description || 'No description available for this position.'}
+                                    {jobWithApplicationStatus.description || 'No description available for this position.'}
                                 </div>
                             </div>
                         </div>
@@ -124,14 +155,14 @@ export default async function JobPage({params}){
                                 <div className="flex items-center gap-2">
                                     <Users size={16} className="text-gray-400" />
                                     <span className="text-gray-600">Job ID:</span>
-                                    <span className="text-gray-900 font-medium">{job.id}</span>
+                                    <span className="text-gray-900 font-medium">{jobWithApplicationStatus.id}</span>
                                 </div>
-                                {job.createdAt && (
+                                {jobWithApplicationStatus.createdAt && (
                                     <div className="flex items-center gap-2">
                                         <Clock size={16} className="text-gray-400" />
                                         <span className="text-gray-600">Posted:</span>
                                         <span className="text-gray-900 font-medium">
-                                            {new Date(job.createdAt).toLocaleDateString()}
+                                            {new Date(jobWithApplicationStatus.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
                                 )}
@@ -145,10 +176,9 @@ export default async function JobPage({params}){
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         Interested in this position?
                     </h3>
-                    <p className="text-gray-600 mb-4">
-                        Apply now to join the team at {job.company?.name || 'this company'}
+                    <p className="text-gray-600">
+                        Apply now to join the team at {jobWithApplicationStatus.company?.name || 'this company'}
                     </p>
-                    <JobApplyButton job={job} />
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/services/jwt';
 
 export function middleware(request: NextRequest) {
-  var path = request.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
   
   // Allow login page
   if (path === '/login') {
@@ -20,13 +20,13 @@ export function middleware(request: NextRequest) {
   }
   
   // For all other pages, check if user is logged in
-  var token = request.cookies.get('token');
+  const token = request.cookies.get('token');
   
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
   
-  var tokenValue = token.value;
+  const tokenValue = token.value;
   
   if (!tokenValue) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
   // Check if token is valid
   try {
     verifyToken(tokenValue);
-  } catch (e) {
+  } catch {
     return NextResponse.redirect(new URL('/login', request.url));
   }
   

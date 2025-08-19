@@ -4,8 +4,12 @@ import Header from "@/components/header";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
+// Make this page dynamic to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
-  const res = await fetch("http://localhost:3000/api/search");
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/search`);
   const data = await res.json();
   const jobs: (Jobs & {
     company: {

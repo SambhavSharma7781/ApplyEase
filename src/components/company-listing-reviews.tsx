@@ -171,7 +171,7 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews } : {
                       </div>
                       <div className="flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={14} className="text-yellow-400 fill-current" />
+                          <Star key={`star-${review.id}-${i}`} size={14} className="text-yellow-400 fill-current" />
                         ))}
                       </div>
                     </div>

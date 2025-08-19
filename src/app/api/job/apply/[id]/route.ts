@@ -38,3 +38,37 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         })
     }
 }
+
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const user = await getUserFromCookies();
+    const { id: jobId } = await params;
+
+    if(!user){
+        return NextResponse.json({
+            success: false,
+            message: "User is not authenticated"
+        })
+    }
+
+    try {
+        const deletedApplication = await prismaClient.applications.deleteMany({
+            where: {
+                user_id: user.id,
+                job_id: jobId
+            }
+        })
+
+        return NextResponse.json({
+            success: true,
+            data: deletedApplication
+        })
+
+    } catch(err: any) {
+        console.log(err.message)
+        return NextResponse.json({
+            success: false,
+            message: "Failed to delete application"
+        })
+    }
+}
+

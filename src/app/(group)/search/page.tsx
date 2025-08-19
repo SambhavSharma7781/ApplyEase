@@ -3,12 +3,16 @@ import JobCard from "@/components/cards/job-card";
 import data from "@/data";
 import prismaClient from "@/services/prisma";
 
+// Make this page dynamic to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+
 export default async function Search({ searchParams }) {
     const q = searchParams.q || "";
     const jt = searchParams.jt || ""; 
     const et = searchParams.et || ""; 
 
-    const res = await fetch(`http://localhost:3000/api/search?q=${q}&jt=${jt}&et=${et}`);
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/search?q=${q}&jt=${jt}&et=${et}`);
     const data = await res.json();
     const jobss = data.jobs || [];
 

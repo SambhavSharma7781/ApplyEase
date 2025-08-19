@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
@@ -17,7 +18,9 @@ export default function RootLayout({
         <div className="min-h-screen bg-gray-50">
             <div className="flex gap-7">
                 <div className="flex-shrink-0">
-                    <Sidebar />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Sidebar />
+                    </Suspense>
                 </div>
                 <div className="flex-1 min-w-0">
                     {children}

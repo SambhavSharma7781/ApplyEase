@@ -42,7 +42,22 @@ export default function ViewJobApplicants({ job }: { job: Job }) {
         getApplications()
     }, [job.id])
 
+    async function handleDelete(id: string) {  
+        try{
+            const res = await fetch('/api/applicants/' + id , {
+                method: "DELETE"
+            }) 
+            const data = await res.json();
+            if(data.success){
+                alert("Application deleted successfully")
+            } else{
+                alert("Failed")
+            }
+        } catch(err) {
+            console.error("Error deleting application:", err)
+        }
 
+    }
     if(user?.company?.id !== job?.company?.id) {
         return null
     }
@@ -107,6 +122,7 @@ export default function ViewJobApplicants({ job }: { job: Job }) {
                                                 <Mail size={14} className="text-gray-400" />
                                                 <span className="text-sm font-medium text-gray-900 truncate">
                                                     {application.user.email}
+                                                    <Button onClick={() => handleDelete(application.id)}>Delete</Button>
                                                 </span>
                                             </div>
                                             <Badge variant="soft" color="gray" size="1">

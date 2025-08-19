@@ -25,7 +25,7 @@ export async function GET(request: NextRequest, { params }) {
 
         return NextResponse.json({
             success: true,
-            job
+            job: job
         });
     }
     catch (error) {

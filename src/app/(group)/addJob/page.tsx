@@ -5,7 +5,7 @@ import { Job } from '@/generated/prisma';
 import * as Label from '@radix-ui/react-label';
 import * as Select from '@radix-ui/react-select';
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
-import { Plus, Briefcase, MapPin, DollarSign, Clock, Building2, ArrowLeft } from 'lucide-react';
+import { Plus, Briefcase, MapPin, DollarSign, Clock, Building2, ArrowLeft, IndianRupee } from 'lucide-react';
 import { userContext } from '../layout';
 import Link from 'next/link';
 
@@ -148,8 +148,8 @@ export default function AddJobPage() {
               {/* Salary */}
               <div className="space-y-2">
                 <Label.Root htmlFor="salary" className="flex items-center gap-2 text-sm font-medium text-gray-900 mb-2">
-                  <DollarSign size={16} className="text-gray-600" />
-                  Annual Salary (USD)
+                  <IndianRupee size={16} className="text-gray-600" />
+                  Annual Salary (RUPPEES)
                 </Label.Root>
                 <input
                   id="salary"

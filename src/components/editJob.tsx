@@ -6,9 +6,21 @@ import { Button, Dialog, Flex, Text, TextField, TextArea } from "@radix-ui/theme
 import { userContext } from '@/app/(group)/layout';
 
 export default function EditBtn({ job }) {
-    const [title, setTitle] = useState(job.title);
-    const [description, setDescription] = useState(job.description);
-    const { user } = useContext(userContext);
+    const [title, setTitle] = useState(job?.title || '');
+    const [description, setDescription] = useState(job?.description || '');
+    const context = useContext(userContext);
+    
+
+    if (!context) {
+        return null; // Don't render if context is not available
+    }
+    
+    const { user } = context;
+    
+    // Don't render if user is not loaded yet or if job data is missing
+    if (!user || !job) {
+        return null;
+    }
 
     async function handleUpdate() {
         try {
@@ -34,7 +46,7 @@ export default function EditBtn({ job }) {
         }
     }
 
-    if (user?.company.id == job?.company.id) {
+    if (user?.company?.id && job?.company?.id && user.company.id === job.company.id) {
 
         return (
             <div>
@@ -84,4 +96,6 @@ export default function EditBtn({ job }) {
         );
     }
 
+    // Return null if user doesn't have permission to edit
+    return null;
 }

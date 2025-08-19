@@ -5,6 +5,9 @@ import CompanyReviewsAndJobsContainer from "@/components/company-listing-reviews
 import Link from "next/link";
 import { ArrowLeft, Building2, Mail, Users, Briefcase, Star } from "lucide-react";
 
+// Make this page dynamic to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+
 export default async function CompanyIDPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
@@ -18,7 +21,8 @@ export default async function CompanyIDPage({ params }: { params: Promise<{ id: 
         },
     });
     
-    const res = await fetch("http://localhost:3000/api/review/" + id);
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/review/${id}`);
     const data = await res.json();
     const reviews = await data.data;
 

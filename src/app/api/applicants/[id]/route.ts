@@ -28,3 +28,31 @@ export async function GET(req: NextRequest , {params}){
         })
     }
 }
+
+export async function DELETE (req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const { id: jobId } = await params;
+
+    try {
+        const res = await prismaClient.applications.delete({
+            where: {
+                id
+            }
+        });
+
+        if (!res) {
+            return NextResponse.json({
+                success: false,
+                message: "Job not found"
+            }, { status: 404 });
+        }
+        return NextResponse.json({
+            success: true,
+            data: res
+        });
+    } catch(err){
+        return NextResponse.json({
+            success: false,
+            message: "Something went wrong"
+        })
+    }    
+}    
