@@ -55,37 +55,50 @@ export default function AddJobPage() {
     event.preventDefault();
     setLoading(true);
 
-    const salaryNum = Number.parseFloat(jobSalary);
-    const data: Job = {
-      title: jobTitle,
-      description: jobDescription,
-      location: jobLocation,
-      salary: salaryNum,
-      employment_Type: employmentType,
-      job_type: jobType,
-      companyId: user?.company?.id
-    };
+    try {
+      const salaryNum = Number.parseFloat(jobSalary);
+      const data: Job = {
+        title: jobTitle,
+        description: jobDescription,
+        location: jobLocation,
+        salary: salaryNum,
+        employment_Type: employmentType,
+        job_type: jobType,
+        companyId: user?.company?.id
+      };
 
-    const res = await fetch("http://localhost:3000/api/jobs", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+      console.log('Submitting job data:', data);
 
-    const resData = await res.json();
-    if (resData.success) {
-      alert("Job added successfully!");
-      // Reset form
-      setJobTitle('');
-      setJobDescription('');
-      setJobLocation('');
-      setJobSalary('');
-      setEmploymentType('Full-time');
-      setJobType('on-site');
+      const res = await fetch("/api/jobs", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Response status:', res.status);
+      const resData = await res.json();
+      console.log('Response data:', resData);
+
+      if (resData.success) {
+        alert("Job added successfully!");
+        // Reset form
+        setJobTitle('');
+        setJobDescription('');
+        setJobLocation('');
+        setJobSalary('');
+        setEmploymentType('Full-time');
+        setJobType('on-site');
+      } else {
+        alert(`Failed to add job: ${resData.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error submitting job:', error);
+      alert('Failed to add job. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
