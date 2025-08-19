@@ -3,7 +3,7 @@ import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest , {params}){
-    const job_id = params.id
+    const { id: job_id } = await params;
 
     try {
         const res = await prismaClient.applications.findMany({

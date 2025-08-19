@@ -15,7 +15,7 @@ import { getUserFromCookies } from "@/helper";
 import prismaClient from "@/services/prisma";
 
 export default async function JobPage({params}){
-    const { id } = params;
+    const { id } = await params;
     
     // Fetch job details
     const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || 'http://localhost:3000';
