@@ -5,7 +5,7 @@ interface TokenData {
 }
 
 export function generateToken(data: TokenData): string {
-    const token = jwt.sign(data, process.env.JWT_KEY as string);
+    const token = jwt.sign(data, process.env.JWT_KEY as string, { expiresIn: '7d' });
     return token;
 }
 

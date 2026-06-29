@@ -1,28 +1,34 @@
-//@ts-nocheck
 import { getUserFromCookies } from "@/helper";
 import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req : NextRequest){
+export async function POST(req: NextRequest) {
     const user = await getUserFromCookies();
+
+    if (!user) {
+        return NextResponse.json({
+            success: false,
+            message: "Unauthorized"
+        }, { status: 401 });
+    }
+
     const body = await req.json();
     const dataToSave = {
         ...body,
-        user_id :user.id
+        user_id: user.id
     }
     try {
         const review = await prismaClient.review.create({
             data: dataToSave
         })
         return NextResponse.json({
-            success: true ,
+            success: true,
             data: review
         })
-
     } catch {
         return NextResponse.json({
-            success: false ,
+            success: false,
             message: "Something went wrong"
-        })
+        }, { status: 500 })
     }
 }

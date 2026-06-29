@@ -11,8 +11,10 @@ export async function GET(req: NextRequest , {params}){
                 job_id
             },
             include : {
-                user: true
-            }    
+                user: {
+                    omit: { password: true }
+                }
+            }
         })
         return NextResponse.json({
             success: true,
