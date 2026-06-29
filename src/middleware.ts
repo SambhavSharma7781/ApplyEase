@@ -12,7 +12,7 @@ const PUBLIC_API_PATHS = [
     '/api/search/suggestion',
 ];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
     const isApiRoute = path.startsWith('/api');
 
@@ -26,7 +26,7 @@ export function middleware(request: NextRequest) {
 
     const rawToken = request.cookies.get('token')?.value;
     const token = rawToken ? decodeURIComponent(rawToken) : null;
-    const decoded = token ? verifyToken(token) : null;
+    const decoded = token ? await verifyToken(token) : null;
 
     if (!decoded) {
         if (isApiRoute) {

@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { SendIcon, CheckCircle, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Job } from '@/types/index';
 
 interface JobApplyButtonProps {
@@ -12,31 +13,26 @@ export default function JobApplyButton({ job, showDeleteButton = false }: JobApp
     const [isLoading, setIsLoading] = useState(false);
     const [isApplied, setIsApplied] = useState(false);
 
-    // Use server's userHasApplied field instead of localStorage
     useEffect(() => {
-        console.log('🔍 Job data received:', { jobId: job?.id, userHasApplied: job?.userHasApplied });
         if (job?.userHasApplied !== undefined) {
             setIsApplied(job.userHasApplied);
-            console.log('✅ Setting isApplied to:', job.userHasApplied);
         }
     }, [job?.userHasApplied]);
 
     async function handleSubmit() {
         if (isLoading || isApplied) return;
-        
         setIsLoading(true);
         try {
             const res = await fetch("/api/job/apply/" + job?.id);
             const data = await res.json();
-            
             if (data.success) {
                 setIsApplied(true);
-                alert("Applied for job successfully!");
+                toast.success("Applied successfully!");
             } else {
-                alert("Something went wrong");
+                toast.error("Something went wrong");
             }
-        } catch (err) {
-            alert("Something went wrong in the code");
+        } catch {
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
@@ -44,22 +40,18 @@ export default function JobApplyButton({ job, showDeleteButton = false }: JobApp
 
     async function handleDeleteApplication() {
         if (isLoading || !isApplied) return;
-        
         setIsLoading(true);
         try {
-            const res = await fetch("/api/job/apply/" + job?.id, {
-                method: "DELETE"
-            });
+            const res = await fetch("/api/job/apply/" + job?.id, { method: "DELETE" });
             const data = await res.json();
-            
             if (data.success) {
                 setIsApplied(false);
-                alert("Application deleted successfully!");
+                toast.success("Application withdrawn");
             } else {
-                alert("Something went wrong");
+                toast.error("Something went wrong");
             }
-        } catch (err) {
-            alert("Something went wrong in the code");
+        } catch {
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
@@ -70,42 +62,30 @@ export default function JobApplyButton({ job, showDeleteButton = false }: JobApp
             <button
                 onClick={handleSubmit}
                 disabled={isLoading || isApplied}
-                className={`
-                    inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${isLoading 
-                        ? 'bg-blue-400 text-white cursor-not-allowed' 
-                        : isApplied 
-                            ? 'bg-green-100 text-green-700 border border-green-200 cursor-not-allowed'
+                className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-sm transition-all duration-200
+                    ${isLoading
+                        ? 'bg-blue-400 text-white cursor-not-allowed'
+                        : isApplied
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-not-allowed'
                             : 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
-                    }
-                `}
+                    }`}
             >
                 {isLoading ? (
-                    <>
-                        <Loader2 size={16} className="animate-spin text-white" />
-                        <span className="text-white">Applying...</span>
-                    </>
+                    <><Loader2 size={16} className="animate-spin" /><span>Applying…</span></>
                 ) : isApplied ? (
-                    <>
-                        <CheckCircle size={16} className="text-green-600" />
-                        <span className="text-green-700">Applied!</span>
-                    </>
+                    <><CheckCircle size={16} /><span>Applied!</span></>
                 ) : (
-                    <>
-                        <SendIcon size={16} className="text-white" />
-                        <span className="text-white">Apply Now</span>
-                    </>
+                    <><SendIcon size={16} /><span>Apply Now</span></>
                 )}
             </button>
 
-            {/* Delete Application Button - Only show if user has applied AND showDeleteButton is true */}
             {isApplied && showDeleteButton && (
                 <button
                     onClick={handleDeleteApplication}
                     disabled={isLoading}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 bg-red-600 text-white hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-sm transition-all duration-200 bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <span className="text-white">Delete Application</span>
+                    Withdraw
                 </button>
             )}
         </div>

@@ -38,7 +38,7 @@ export interface Company {
 export interface User {
     id: string;
     email: string;
-    role?: string;
+    role?: string | null;
     company?: Company | null;
 }
 

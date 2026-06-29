@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
             }, { status: 401 });
         }
 
-        const token = generateToken({ id: user.id });
+        const token = await generateToken({ id: user.id });
         const response = NextResponse.json({
             success: true,
             data: { id: user.id, email: user.email, role: user.role }

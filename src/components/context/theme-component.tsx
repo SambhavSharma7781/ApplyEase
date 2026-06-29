@@ -1,17 +1,8 @@
-//@ts-nocheck
-"use client"
-import React, { useState } from 'react'
-import { Theme } from '@radix-ui/themes'
-import { createContext } from 'react'
+"use client";
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes";
+import { ReactNode } from "react";
 
-export const Context = createContext();
-export default function ThemeComponent({ children }) {
-  const [isDark, setIsDark] = useState(false)
-  return (
-    <Context.Provider value={{ isDark, setIsDark }}>
-      <Theme appearance='dark'>
-        {children}
-      </Theme>
-    </Context.Provider>
-  )
+export default function ThemeComponent({ children }: { children: ReactNode }) {
+  return <Theme appearance="light">{children}</Theme>;
 }
