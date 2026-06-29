@@ -33,15 +33,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to see the application.
-
 ## Environment Variables
 
 ```env
 DATABASE_URL="your_mongodb_connection_string"
 JWT_KEY="your_jwt_secret"
 ```
-
-## Deploy
-
-Deploy easily on [Vercel](https://vercel.com) by connecting your GitHub repository.
