@@ -1,8 +1,9 @@
-import React from 'react';
 import Link from 'next/link';
-import { CheckCircle, MapPin, Building2, DollarSign, IndianRupee } from 'lucide-react';
+import { CheckCircle2, MapPin, ArrowRight, Building2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import CompanyLogo from '../company-logo';
+import { formatSalary } from '@/lib/format';
 
-// Types based on the Prisma schema structure
 interface AppliedJobCardProps {
   application: {
     id: string;
@@ -23,60 +24,62 @@ interface AppliedJobCardProps {
 
 export default function AppliedJobCard({ application }: AppliedJobCardProps) {
   const { job } = application;
+  const companyName = job.company?.name ?? 'Company';
+  const salaryLabel = formatSalary(job.salary);
 
   return (
-    <div className="group relative bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 p-5 sm:p-6 h-full flex flex-col">
-      {/* Status Badge */}
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-          <CheckCircle size={14} />
+    <div className="group relative flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md sm:p-6">
+      {/* Header: company + status */}
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <CompanyLogo name={companyName} size="md" />
+          <div className="min-w-0">
+            <p className="truncate font-semibold text-gray-900">{companyName}</p>
+            {job.location && (
+              <div className="mt-0.5 flex items-center gap-1 text-sm text-gray-500">
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{job.location}</span>
+              </div>
+            )}
+          </div>
+        </div>
+        <Badge className="gap-1 rounded-full border-emerald-200 bg-emerald-50 text-emerald-700">
+          <CheckCircle2 className="h-3.5 w-3.5" />
           Applied
-        </span>
+        </Badge>
       </div>
 
-      {/* Job Title */}
-      <h3 className="font-semibold text-gray-900 text-lg sm:text-xl leading-tight line-clamp-2 mb-3">
-        {job.title}
-      </h3>
+      {/* Title */}
+      <Link href={`/job/${job.id}`} className="mb-2 block">
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600">
+          {job.title}
+        </h3>
+      </Link>
 
-      {/* Job Details */}
-      <div className="space-y-2 mb-4 flex-1">
-        {job.company && (
-          <div className="flex items-center gap-2 text-gray-600">
-            <Building2 size={16} />
-            <span className="text-sm">{job.company.name}</span>
-          </div>
-        )}
-        
-        {job.location && (
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin size={16} />
-            <span className="text-sm">{job.location}</span>
-          </div>
-        )}
-        
-        {job.salary && (
-          <div className="flex items-center gap-2 text-gray-600">
-            <IndianRupee size={16} />
-            <span className="text-sm font-medium">{job.salary.toLocaleString()}</span>
-          </div>
-        )}
-      </div>
+      {salaryLabel && (
+        <p className="mb-3 text-sm font-medium text-emerald-700">{salaryLabel}</p>
+      )}
 
-      {/* Action Buttons */}
-      <div className="flex gap-2 pt-4 border-t border-gray-100">
-        <Link 
+      <p className="mb-5 line-clamp-2 flex-1 text-sm leading-relaxed text-gray-600">
+        {job.description}
+      </p>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2 border-t border-gray-100 pt-4">
+        <Link
           href={`/job/${job.id}`}
-          className="flex-1 text-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
         >
           View Job
+          <ArrowRight className="h-4 w-4" />
         </Link>
         {job.company && (
-          <Link 
+          <Link
             href={`/company/${job.company.id}`}
-            className="flex-1 text-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50"
           >
-            Company
+            <Building2 className="h-4 w-4" />
+            <span className="hidden sm:inline">Company</span>
           </Link>
         )}
       </div>

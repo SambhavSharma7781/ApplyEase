@@ -2,100 +2,95 @@
 'use client'
 
 import { useContext, useState } from 'react';
-import { Button, Dialog, Flex, Text, TextField, TextArea } from "@radix-ui/themes";
-import { userContext } from '@/app/(group)/layout';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { userContext } from '@/components/client-providers';
+import { toast } from 'sonner';
+import { Pencil } from 'lucide-react';
 
 export default function EditBtn({ job }) {
+    const [open, setOpen] = useState(false);
     const [title, setTitle] = useState(job?.title || '');
     const [description, setDescription] = useState(job?.description || '');
+    const [loading, setLoading] = useState(false);
     const context = useContext(userContext);
-    
 
-    if (!context) {
-        return null; // Don't render if context is not available
-    }
-    
+    if (!context || !job) return null;
     const { user } = context;
-    
-    // Don't render if user is not loaded yet or if job data is missing
-    if (!user || !job) {
-        return null;
-    }
+    if (!user || user?.company?.id !== job?.company?.id) return null;
 
     async function handleUpdate() {
+        setLoading(true);
         try {
             const res = await fetch("/api/job/" + job.id, {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, description }),
             });
-
             const data = await res.json();
-
             if (data.success) {
-                alert("Job updated successfully");
+                toast.success("Job updated successfully");
+                setOpen(false);
                 window.location.reload();
             } else {
-                alert("Something went wrong: " + (data.message || ""));
+                toast.error("Something went wrong: " + (data.message || ""));
             }
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong in the code");
+        } catch {
+            toast.error("Something went wrong");
+        } finally {
+            setLoading(false);
         }
     }
 
-    if (user?.company?.id && job?.company?.id && user.company.id === job.company.id) {
+    return (
+        <>
+            <button
+                onClick={() => setOpen(true)}
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            >
+                <Pencil size={16} />
+                Edit Job
+            </button>
 
-        return (
-            <div>
-                <Dialog.Root>
-                    <Dialog.Trigger asChild>
-                        <Button>Edit Job</Button>
-                    </Dialog.Trigger>
-
-                    <Dialog.Content maxWidth="450px">
-                        <Dialog.Title>Edit Job Details</Dialog.Title>
-
-                        <Flex direction="column" gap="3">
-                            <label>
-                                <Text as="div" size="2" mb="1" weight="bold">
-                                    Job Title
-                                </Text>
-                                <TextField.Root
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    placeholder="Enter the job title"
-                                />
-                            </label>
-                            <label>
-                                <Text as="div" size="2" mb="1" weight="bold">
-                                    Description
-                                </Text>
-                                <TextArea
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Enter the job description"
-                                    size="3"
-                                />
-                            </label>
-                        </Flex>
-
-                        <Flex gap="3" mt="4" justify="end">
-                            <Dialog.Close>
-                                <Button variant="soft" color="gray">
-                                    Cancel
-                                </Button>
-                            </Dialog.Close>
-                            <Button onClick={handleUpdate}>Save Changes</Button>
-                        </Flex>
-                    </Dialog.Content>
-                </Dialog.Root>
-            </div>
-        );
-    }
-
-    // Return null if user doesn't have permission to edit
-    return null;
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Edit Job Details</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-2">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="edit-title">Job Title</Label>
+                            <Input
+                                id="edit-title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Enter the job title"
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="edit-desc">Description</Label>
+                            <Textarea
+                                id="edit-desc"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Enter the job description"
+                                rows={5}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline">Cancel</Button>
+                        </DialogClose>
+                        <Button onClick={handleUpdate} disabled={loading}>
+                            {loading ? "Saving…" : "Save Changes"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
 }

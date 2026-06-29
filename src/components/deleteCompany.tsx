@@ -1,36 +1,34 @@
 //@ts-nocheck
 'use client'
-import { Button } from "@radix-ui/themes";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
+
 export default function DeleteCompany({ companyId }) {
     const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this company? All jobs and data will be removed.')) return;
+
         try {
-            const res = await fetch(`/api/company/${companyId}`, {
-                method: 'DELETE',
-            });
-
-            if (!res.ok) {
-                throw new Error("Server returned error response");
-            }
-
-            const data = await res.json(); 
-
+            const res = await fetch(`/api/company/${companyId}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error("Server returned error response");
+            const data = await res.json();
             if (data.success) {
-                alert("Company deleted successfully");
-                window.location.href = '/';
+                toast.success("Company deleted successfully");
+                window.location.href = '/company';
             } else {
-                alert(data.message || "Deletion failed");
+                toast.error(data.message || "Deletion failed");
             }
-
-        } catch (err) {
-            alert("Something went wrong while deleting the company.");
-            console.error("Delete error:", err);
+        } catch {
+            toast.error("Something went wrong while deleting the company");
         }
     };
-    
 
     return (
-        <Button onClick={handleDelete} className="btn btn-danger">
+        <button
+            onClick={handleDelete}
+            className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
+        >
+            <Trash2 size={16} />
             Delete Company
-        </Button>
+        </button>
     );
 }

@@ -1,83 +1,118 @@
-//@ts-nocheck
 "use client";
-import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Building2, Plus } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export default function AddCompany() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+    const [open, setOpen] = useState(false);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!name || !description ) {
-      alert("Please fill all fields.");
-      return;
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        if (!name.trim() || !description.trim()) {
+            toast.error("Please fill all fields");
+            return;
+        }
+        setLoading(true);
+        try {
+            const res = await fetch("/api/company", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, description }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                toast.success("Company created successfully!");
+                setName("");
+                setDescription("");
+                setOpen(false);
+                router.refresh();
+            } else {
+                toast.error("Failed to create company: " + (data.message || "Unknown error"));
+            }
+        } catch {
+            toast.error("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
     }
-    const companyData = {
-      name,
-      description,
-    }
-    const res = await fetch("/api/company", {
-      method: "POST",
-      body: JSON.stringify(companyData),
-    });
-    const data = await res.json();  
-    if (data.success) {
-      alert("Company created successfully");
-      setName("");
-      setDescription("");
-    } else {
-      alert("Failed to create company: " + data.message);
-    }
-  };
 
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger>
-        <Button>Add Company</Button>
-      </Dialog.Trigger>
+    return (
+        <>
+            <button
+                onClick={() => setOpen(true)}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
+                <Plus size={16} />
+                Add Company
+            </button>
 
-      <Dialog.Content maxWidth="450px">
-        <Dialog.Title>Add Company</Dialog.Title>
-        <Dialog.Description size="2" mb="4">
-          Fill in the details to add a new company.
-        </Dialog.Description>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50">
+                                <Building2 size={16} className="text-blue-600" />
+                            </div>
+                            Add Company
+                        </DialogTitle>
+                        <DialogDescription>
+                            Fill in the details to create your company profile.
+                        </DialogDescription>
+                    </DialogHeader>
 
-        <Flex direction="column" gap="3">
-          <label>
-            <Text as="div" size="2" mb="1" weight="bold">
-              Name
-            </Text>
-            <TextField.Root
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter company name"
-            />
-          </label>
-
-          <label>
-            <Text as="div" size="2" mb="1" weight="bold">
-              Description
-            </Text>
-            <TextField.Root
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter company description"
-            />
-          </label>
-        </Flex>
-
-        <Flex gap="3" mt="4" justify="end">
-          <Dialog.Close>
-            <Button variant="soft" color="gray">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button onClick={handleSubmit}>Save</Button>
-          </Dialog.Close>
-        </Flex>
-      </Dialog.Content>
-    </Dialog.Root>
-  );
+                    <form onSubmit={handleSubmit}>
+                        <div className="space-y-4 py-2">
+                            <div className="space-y-1.5">
+                                <Label htmlFor="company-name">Company Name</Label>
+                                <Input
+                                    id="company-name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="e.g. Acme Corp"
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="company-desc">Description</Label>
+                                <Textarea
+                                    id="company-desc"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="What does your company do?"
+                                    rows={3}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter className="mt-4">
+                            <DialogClose asChild>
+                                <Button type="button" variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit" disabled={loading}>
+                                {loading ? "Creating…" : "Create Company"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
 }

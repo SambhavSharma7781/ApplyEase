@@ -8,7 +8,7 @@ export async function getUserFromCookies() {
     if (!token) {
         return null;
     }
-    const data = verifyToken(token);
+    const data = await verifyToken(token);
     if (!data) return null;
     
     const user = await prismaClient.user.findUnique({

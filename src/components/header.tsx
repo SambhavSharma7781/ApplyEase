@@ -2,7 +2,7 @@
 'use client'
 import React, { useEffect, useContext, useState } from 'react';
 import { Building, CircleUserRound, Plus, Search, Briefcase, Bookmark, LogOut } from 'lucide-react';
-import { userContext } from '@/app/(group)/layout';
+import { userContext } from '@/components/client-providers';
 import AddCompany from './addCompany';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

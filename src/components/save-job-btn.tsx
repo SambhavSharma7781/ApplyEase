@@ -1,106 +1,88 @@
 "use client"
-import React, { useEffect, useContext, useState } from 'react'
-import { SavedJobsContext } from '@/app/(group)/layout'
+import { useEffect, useContext, useState } from 'react'
+import { SavedJobsContext } from '@/components/client-providers'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import { JobWithCompany } from '@/types/index'
 
 interface SaveJobBtnProps {
-    job: any; // Using any to handle different job structures
+    job: JobWithCompany;
 }
 
 export default function SaveJobBtn({ job }: SaveJobBtnProps) {
     const context = useContext(SavedJobsContext);
     const [isSaved, setIsSaved] = useState(false);
 
-    if (!context) {
-        return null;
-    }
+    useEffect(() => {
+        if (context?.savedJobs && job) {
+            setIsSaved(context.savedJobs.some((elem) => elem.id === job.id));
+        }
+    }, [context?.savedJobs, job]);
+
+    if (!context) return null;
 
     const { savedJobs, setSavedJobs } = context;
 
-    useEffect(() => {
-        if (savedJobs && job) {
-            const isJobSaved = savedJobs.find((elem) => elem.id === job.id);
-            setIsSaved(!!isJobSaved);
-        }
-    }, [savedJobs, job]);
-
     async function handleSave() {
         if (!job) return;
-        
         try {
             const res = await fetch("/api/jobs/save", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ jobId: job.id })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jobId: job.id }),
             });
-            
             const data = await res.json();
-            
             if (data.success) {
-                // Refresh saved jobs by refetching from API
                 const refreshRes = await fetch("/api/jobs/saved");
                 if (refreshRes.ok) {
                     const refreshData = await refreshRes.json();
-                    if (refreshData.success) {
-                        setSavedJobs(refreshData.savedJobs || []);
-                    }
+                    if (refreshData.success) setSavedJobs(refreshData.savedJobs || []);
                 }
                 setIsSaved(true);
-                alert("Job saved successfully!");
+                toast.success("Job saved");
             } else {
-                alert("Failed to save job");
+                toast.error("Failed to save job");
             }
-        } catch (error) {
-            alert("Something went wrong");
+        } catch {
+            toast.error("Something went wrong");
         }
     }
 
     async function handleUnsave() {
         if (!job) return;
-        
         try {
             const res = await fetch("/api/jobs/unsave", {
                 method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ jobId: job.id })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ jobId: job.id }),
             });
-            
             const data = await res.json();
-            
             if (data.success) {
-                const updatedArray = savedJobs.filter((elem) => elem.id !== job.id);
-                setSavedJobs(updatedArray);
+                setSavedJobs(savedJobs.filter((elem) => elem.id !== job.id));
                 setIsSaved(false);
-                alert("Job removed from saved jobs!");
+                toast.success("Removed from saved");
             } else {
-                alert("Failed to unsave job");
+                toast.error("Failed to remove job");
             }
-        } catch (error) {
-            alert("Something went wrong");
+        } catch {
+            toast.error("Something went wrong");
         }
     }
 
     return (
         <button
             onClick={isSaved ? handleUnsave : handleSave}
-            className={`
-                flex-shrink-0 p-2 rounded-lg transition-colors
-                ${isSaved 
-                    ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' 
-                    : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
-                }
-            `}
-            aria-label={isSaved ? "Unsave job" : "Save job"}
-        >
-            {isSaved ? (
-                <BookmarkCheck size={18} />
-            ) : (
-                <Bookmark size={18} />
+            className={cn(
+                "flex shrink-0 items-center justify-center rounded-lg p-2 transition-colors",
+                isSaved
+                    ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    : "text-gray-400 hover:bg-blue-50 hover:text-blue-600"
             )}
+            aria-label={isSaved ? "Unsave job" : "Save job"}
+            title={isSaved ? "Saved" : "Save job"}
+        >
+            {isSaved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
         </button>
     );
 }
