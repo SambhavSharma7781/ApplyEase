@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     const userToCreate = {
         email: body.email,
         password: hashedPassword,
+        role: body.role || 'candidate',
     }
 
     try {

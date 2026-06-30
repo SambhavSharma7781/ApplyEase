@@ -49,7 +49,7 @@ export default function EditBtn({ job }) {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.97]"
             >
                 <Pencil size={16} />
                 Edit Job
@@ -58,7 +58,12 @@ export default function EditBtn({ job }) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Edit Job Details</DialogTitle>
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50">
+                                <Pencil className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <DialogTitle>Edit Job Details</DialogTitle>
+                        </div>
                     </DialogHeader>
                     <div className="space-y-4 py-2">
                         <div className="space-y-1.5">

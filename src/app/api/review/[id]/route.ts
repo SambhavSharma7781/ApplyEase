@@ -18,8 +18,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             success: true,
             data: reviews
         });
-    } catch (err: any) {
-        console.log(err.message);
+    } catch (err: unknown) {
+        console.log((err as Error).message);
         return NextResponse.json({
             success: false,
             message: "Something went wrong in the code"

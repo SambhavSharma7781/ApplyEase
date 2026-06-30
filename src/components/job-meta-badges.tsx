@@ -11,7 +11,7 @@ interface JobMetaBadgesProps {
     className?: string;
 }
 
-const base = "gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium";
+const base = "gap-1.5 rounded-full border px-2.5 py-1 text-[13px] font-medium shadow-sm transition-colors hover:shadow";
 
 /** Single source of truth for the job metadata chip row. Server-safe. */
 export default function JobMetaBadges({

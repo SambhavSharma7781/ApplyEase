@@ -22,7 +22,7 @@ export default function CompanyLogo({ name, size = "md", className }: CompanyLog
     return (
         <div
             className={cn(
-                "flex shrink-0 items-center justify-center font-semibold text-white ring-4",
+                "flex shrink-0 items-center justify-center font-semibold text-white ring-2",
                 bg,
                 ring,
                 SIZES[size],

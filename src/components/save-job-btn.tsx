@@ -1,6 +1,6 @@
-"use client"
+'use client'
 import { useEffect, useContext, useState } from 'react'
-import { SavedJobsContext } from '@/components/client-providers'
+import { SavedJobsContext, userContext } from '@/components/client-providers'
 import { Bookmark, BookmarkCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,7 @@ interface SaveJobBtnProps {
 
 export default function SaveJobBtn({ job }: SaveJobBtnProps) {
     const context = useContext(SavedJobsContext);
+    const uContext = useContext(userContext);
     const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
@@ -20,12 +21,20 @@ export default function SaveJobBtn({ job }: SaveJobBtnProps) {
         }
     }, [context?.savedJobs, job]);
 
-    if (!context) return null;
+    if (!context || uContext?.user?.role === 'employer') return null;
 
     const { savedJobs, setSavedJobs } = context;
 
     async function handleSave() {
         if (!job) return;
+        
+        toast.dismiss(); // Instantly dismiss any existing toast
+
+        // Optimistic update
+        setIsSaved(true);
+        const previousSavedJobs = [...savedJobs];
+        setSavedJobs([...savedJobs, job]);
+
         try {
             const res = await fetch("/api/jobs/save", {
                 method: "POST",
@@ -33,24 +42,37 @@ export default function SaveJobBtn({ job }: SaveJobBtnProps) {
                 body: JSON.stringify({ jobId: job.id }),
             });
             const data = await res.json();
+            
             if (data.success) {
-                const refreshRes = await fetch("/api/jobs/saved");
-                if (refreshRes.ok) {
-                    const refreshData = await refreshRes.json();
-                    if (refreshData.success) setSavedJobs(refreshData.savedJobs || []);
-                }
-                setIsSaved(true);
                 toast.success("Job saved");
+                // Background refresh to ensure context stays perfectly in sync
+                fetch("/api/jobs/saved")
+                    .then(r => r.json())
+                    .then(d => { if (d.success) setSavedJobs(d.savedJobs || []); })
+                    .catch(() => {});
             } else {
+                // Revert on failure
+                setIsSaved(false);
+                setSavedJobs(previousSavedJobs);
                 toast.error("Failed to save job");
             }
         } catch {
+            setIsSaved(false);
+            setSavedJobs(previousSavedJobs);
             toast.error("Something went wrong");
         }
     }
 
     async function handleUnsave() {
         if (!job) return;
+        
+        toast.dismiss(); // Instantly dismiss any existing toast
+
+        // Optimistic update
+        setIsSaved(false);
+        const previousSavedJobs = [...savedJobs];
+        setSavedJobs(savedJobs.filter((elem) => elem.id !== job.id));
+
         try {
             const res = await fetch("/api/jobs/unsave", {
                 method: "DELETE",
@@ -58,14 +80,18 @@ export default function SaveJobBtn({ job }: SaveJobBtnProps) {
                 body: JSON.stringify({ jobId: job.id }),
             });
             const data = await res.json();
+            
             if (data.success) {
-                setSavedJobs(savedJobs.filter((elem) => elem.id !== job.id));
-                setIsSaved(false);
                 toast.success("Removed from saved");
             } else {
+                // Revert on failure
+                setIsSaved(true);
+                setSavedJobs(previousSavedJobs);
                 toast.error("Failed to remove job");
             }
         } catch {
+            setIsSaved(true);
+            setSavedJobs(previousSavedJobs);
             toast.error("Something went wrong");
         }
     }
@@ -74,7 +100,7 @@ export default function SaveJobBtn({ job }: SaveJobBtnProps) {
         <button
             onClick={isSaved ? handleUnsave : handleSave}
             className={cn(
-                "flex shrink-0 items-center justify-center rounded-lg p-2 transition-colors",
+                "flex shrink-0 items-center justify-center rounded-lg p-2 transition-all duration-200 active:scale-90",
                 isSaved
                     ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     : "text-gray-400 hover:bg-blue-50 hover:text-blue-600"

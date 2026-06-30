@@ -27,12 +27,16 @@ export default async function CompaniesPage() {
 
                 {companies.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        {companies.map((company) => (
-                            <Link
+                        {companies.map((company, idx) => (
+                            <div 
                                 key={company.id}
-                                href={`/company/${company.id}`}
-                                className="group flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                                className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+                                style={{ animationDelay: `${idx * 50}ms`, animationDuration: '400ms' }}
                             >
+                                <Link
+                                    href={`/company/${company.id}`}
+                                    className="group flex h-full flex-col rounded-3xl border border-transparent bg-white p-6 sm:p-8 shadow-lg shadow-gray-200/50 transition-all duration-500 will-change-transform hover:-translate-y-1.5 hover:shadow-xl hover:shadow-indigo-500/10"
+                                >
                                 {/* Header */}
                                 <div className="mb-4 flex items-start gap-4">
                                     <CompanyLogo name={company.name} size="lg" />
@@ -60,7 +64,8 @@ export default async function CompaniesPage() {
                                         <span>Hiring</span>
                                     </div>
                                 </div>
-                            </Link>
+                                </Link>
+                            </div>
                         ))}
                     </div>
                 ) : (

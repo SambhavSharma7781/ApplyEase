@@ -28,8 +28,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             data: applications
         })
 
-    } catch(err: any) {
-        console.log(err.message)
+    } catch(err: unknown) {
+        console.log((err as Error).message)
         return NextResponse.json({
             success: false,
             data :{
@@ -63,8 +63,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
             data: deletedApplication
         })
 
-    } catch(err: any) {
-        console.log(err.message)
+    } catch(err: unknown) {
+        console.log((err as Error).message)
         return NextResponse.json({
             success: false,
             message: "Failed to delete application"

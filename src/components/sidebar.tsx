@@ -32,7 +32,7 @@ function RadioRow({
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="group flex cursor-pointer items-center gap-3">
+    <label className="group flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 transition-colors duration-100 hover:bg-indigo-50/50">
       <input
         type="radio"
         name={name}
@@ -43,11 +43,11 @@ function RadioRow({
       />
       <span
         className={cn(
-          "flex h-4 w-4 items-center justify-center rounded-full border-2 transition-all",
-          checked ? "border-blue-600 bg-blue-600" : "border-gray-300 group-hover:border-blue-400"
+          "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-200 shrink-0",
+          checked ? "border-indigo-600 bg-indigo-600" : "border-gray-300 group-hover:border-indigo-400"
         )}
       >
-        {checked && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
+        {checked && <span className="h-2 w-2 rounded-full bg-white" />}
       </span>
       <span
         className={cn(
@@ -88,17 +88,17 @@ export default function Sidebar() {
   const hasFilters = jobType !== "" || employmentType !== "";
 
   return (
-    <aside className="w-full lg:sticky lg:top-20 lg:w-72">
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4 text-blue-600" />
-            <h2 className="font-semibold text-gray-900">Filters</h2>
+    <aside className="w-full lg:sticky lg:top-24 lg:w-60 shrink-0">
+      <div className="rounded-2xl border border-transparent bg-white shadow-xl shadow-gray-200/40">
+        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5">
+          <div className="flex items-center gap-3">
+            <SlidersHorizontal className="h-5 w-5 text-indigo-600" />
+            <h2 className="font-bold text-gray-900 text-lg">Filters</h2>
           </div>
           {hasFilters && (
             <button
               onClick={clearAll}
-              className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 transition-colors hover:text-blue-600"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 transition-colors hover:text-indigo-600 bg-gray-50 hover:bg-indigo-50 px-3 py-1.5 rounded-full"
             >
               <X className="h-3.5 w-3.5" />
               Clear
@@ -143,7 +143,10 @@ export default function Sidebar() {
             </div>
           </div>
 
-          <Button onClick={handleFilter} className="w-full gap-2">
+          <Button 
+            onClick={handleFilter} 
+            className="w-full gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:shadow-glow hover:-translate-y-0.5 transition-all shadow-md py-5 text-[15px] font-semibold"
+          >
             <SlidersHorizontal className="h-4 w-4" />
             Apply Filters
           </Button>

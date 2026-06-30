@@ -41,25 +41,30 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         const jobWithStatus = { ...job, userHasApplied };
 
         return (
-            <div className="min-h-screen bg-gray-50">
-                <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-slate-50 relative">
+                {/* Background ambient light */}
+                <div className="absolute top-0 left-0 w-full h-[400px] bg-gradient-to-b from-indigo-50/80 to-transparent pointer-events-none"></div>
+
+                <div className="relative mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
                     <BackLink href="/" label="Back to Jobs" />
 
-                    <div className="grid gap-6 lg:grid-cols-3">
+                    <div className="grid gap-8 lg:grid-cols-3 mt-6">
                         {/* Main content */}
-                        <div className="space-y-6 lg:col-span-2">
+                        <div className="space-y-8 lg:col-span-2">
                             {/* Header card */}
-                            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+                            <div className="relative overflow-hidden rounded-3xl border border-transparent bg-white p-8 sm:p-10 shadow-xl shadow-gray-200/50">
+                                {/* Subtle card mesh background */}
+                                <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-indigo-50/80 blur-3xl"></div>
                                 <div className="mb-5 flex items-start gap-4">
                                     <CompanyLogo name={jobWithStatus.company?.name ?? 'Company'} size="lg" />
-                                    <div className="min-w-0 flex-1">
+                                    <div className="min-w-0 flex-1 z-10">
                                         <Link
                                             href={`/company/${jobWithStatus.company?.id}`}
-                                            className="font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                                            className="inline-block text-sm font-bold uppercase tracking-wider text-indigo-600 hover:text-indigo-700 transition-colors"
                                         >
                                             {jobWithStatus.company?.name ?? 'Company'}
                                         </Link>
-                                        <h1 className="mt-1 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
+                                        <h1 className="mt-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl">
                                             {jobWithStatus.title}
                                         </h1>
                                     </div>
@@ -73,7 +78,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
                                     className="mb-6"
                                 />
 
-                                <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-5">
+                                <div className="relative z-10 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-6">
                                     <JobApplyButton job={jobWithStatus} showDeleteButton={true} />
                                     <ViewJobApplicants job={jobWithStatus} />
                                     <EditBtn job={jobWithStatus} />
@@ -82,29 +87,28 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
                             </div>
 
                             {/* Description */}
-                            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-                                <h2 className="mb-4 text-xl font-semibold text-gray-900">Job Description</h2>
-                                <div className="whitespace-pre-wrap leading-relaxed text-gray-700">
+                            <div className="rounded-3xl border border-transparent bg-white p-8 sm:p-10 shadow-xl shadow-gray-200/50">
+                                <h2 className="mb-6 text-2xl font-bold text-gray-900">About the Role</h2>
+                                <div className="prose prose-indigo max-w-none whitespace-pre-wrap leading-relaxed text-gray-600 text-lg">
                                     {jobWithStatus.description || 'No description available.'}
                                 </div>
                             </div>
                         </div>
 
                         {/* Sticky sidebar */}
-                        <div className="lg:sticky lg:top-20 lg:self-start">
-                            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6">
-                                <h3 className="mb-2 font-semibold text-gray-900">Interested in this role?</h3>
-                                <p className="mb-4 text-sm text-gray-600">
+                        <div className="lg:sticky lg:top-24 lg:self-start">
+                            <div className="rounded-3xl border border-indigo-100/50 bg-gradient-to-br from-indigo-50 to-white p-8 shadow-xl shadow-indigo-900/5 transition-all hover:shadow-2xl hover:shadow-indigo-900/10">
+                                <h3 className="mb-3 text-xl font-bold text-gray-900">Interested in this role?</h3>
+                                <p className="mb-6 text-gray-600 leading-relaxed">
                                     Apply now to join the team at{' '}
-                                    <span className="font-medium text-gray-900">
+                                    <span className="font-semibold text-indigo-700">
                                         {jobWithStatus.company?.name ?? 'this company'}
                                     </span>.
                                 </p>
-                                <JobApplyButton job={jobWithStatus} />
                                 {jobWithStatus.company && (
                                     <Link
                                         href={`/company/${jobWithStatus.company.id}`}
-                                        className="mt-3 flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                                        className="flex w-full items-center justify-center rounded-xl border border-indigo-200 bg-white px-5 py-3 font-semibold text-indigo-700 shadow-sm transition-all duration-300 hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-md active:scale-95"
                                     >
                                         View Company
                                     </Link>
@@ -124,7 +128,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
                     <p className="mb-4 text-gray-600">There was an error loading the job details.</p>
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.98]"
                     >
                         Back to Jobs
                     </Link>

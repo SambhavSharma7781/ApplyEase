@@ -48,7 +48,7 @@ export default function ClientProviders({ children, initialUser }: ClientProvide
             <SavedJobsContext.Provider value={{ savedJobs, setSavedJobs }}>
                 <ThemeComponent>
                     {children}
-                    <Toaster richColors position="top-center" />
+                    <Toaster richColors position="bottom-right" style={{ zIndex: 9999 }} visibleToasts={1} />
                 </ThemeComponent>
             </SavedJobsContext.Provider>
         </userContext.Provider>

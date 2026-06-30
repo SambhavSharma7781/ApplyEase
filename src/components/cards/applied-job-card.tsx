@@ -28,7 +28,7 @@ export default function AppliedJobCard({ application }: AppliedJobCardProps) {
   const salaryLabel = formatSalary(job.salary);
 
   return (
-    <div className="group relative flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md sm:p-6">
+    <div className="group relative flex h-full flex-col rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm transition-all duration-300 will-change-transform hover:-translate-y-0.5 hover:border-blue-200/60 hover:shadow-md sm:p-6">
       {/* Header: company + status */}
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
@@ -43,7 +43,7 @@ export default function AppliedJobCard({ application }: AppliedJobCardProps) {
             )}
           </div>
         </div>
-        <Badge className="gap-1 rounded-full border-emerald-200 bg-emerald-50 text-emerald-700">
+        <Badge className="gap-1.5 rounded-full border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm">
           <CheckCircle2 className="h-3.5 w-3.5" />
           Applied
         </Badge>
@@ -51,7 +51,7 @@ export default function AppliedJobCard({ application }: AppliedJobCardProps) {
 
       {/* Title */}
       <Link href={`/job/${job.id}`} className="mb-2 block">
-        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600">
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-gray-900 transition-colors duration-150 group-hover:text-blue-600">
           {job.title}
         </h3>
       </Link>
@@ -68,7 +68,7 @@ export default function AppliedJobCard({ application }: AppliedJobCardProps) {
       <div className="flex items-center gap-2 border-t border-gray-100 pt-4">
         <Link
           href={`/job/${job.id}`}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.97]"
         >
           View Job
           <ArrowRight className="h-4 w-4" />
@@ -76,7 +76,7 @@ export default function AppliedJobCard({ application }: AppliedJobCardProps) {
         {job.company && (
           <Link
             href={`/company/${job.company.id}`}
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 hover:bg-gray-50"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.97]"
           >
             <Building2 className="h-4 w-4" />
             <span className="hidden sm:inline">Company</span>

@@ -24,6 +24,10 @@ export default async function CompanyIDPage({ params }: { params: Promise<{ id: 
             })
         ]);
 
+        const { getUserFromCookies } = await import("@/helper");
+        const currentUser = await getUserFromCookies();
+        const isOwner = currentUser?.id === company?.ownerId;
+
         if (!company) notFound();
 
         return (
@@ -44,33 +48,41 @@ export default async function CompanyIDPage({ params }: { params: Promise<{ id: 
                                     </div>
                                 </div>
                             </div>
-                            <div className="shrink-0">
-                                <DeleteCompany companyId={id} />
-                            </div>
+                            {isOwner && (
+                                <div className="shrink-0">
+                                    <DeleteCompany companyId={id} />
+                                </div>
+                            )}
                         </div>
 
                         {/* Stats */}
-                        <div className="mt-6 grid grid-cols-2 gap-4 rounded-xl bg-gray-50 p-4 sm:grid-cols-3">
-                            <div className="text-center">
-                                <div className="flex justify-center mb-1">
-                                    <Briefcase size={18} className="text-blue-600" />
+                        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                            <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 text-center transition-colors hover:bg-gray-50">
+                                <div className="flex justify-center mb-1.5">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100/50 text-blue-600">
+                                        <Briefcase size={16} />
+                                    </div>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">{company.jobs?.length || 0}</p>
-                                <p className="text-xs text-gray-500">Active Jobs</p>
+                                <p className="mt-0.5 text-xs font-medium text-gray-500">Active Jobs</p>
                             </div>
-                            <div className="text-center">
-                                <div className="flex justify-center mb-1">
-                                    <Star size={18} className="text-yellow-500" />
+                            <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 text-center transition-colors hover:bg-gray-50">
+                                <div className="flex justify-center mb-1.5">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-100/50 text-yellow-600">
+                                        <Star size={16} />
+                                    </div>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">{reviews?.length || 0}</p>
-                                <p className="text-xs text-gray-500">Reviews</p>
+                                <p className="mt-0.5 text-xs font-medium text-gray-500">Reviews</p>
                             </div>
-                            <div className="hidden text-center sm:block">
-                                <div className="flex justify-center mb-1">
-                                    <Mail size={18} className="text-purple-600" />
+                            <div className="hidden rounded-xl border border-gray-100 bg-gray-50/50 p-4 text-center transition-colors hover:bg-gray-50 sm:block">
+                                <div className="flex justify-center mb-1.5">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100/50 text-purple-600">
+                                        <Mail size={16} />
+                                    </div>
                                 </div>
                                 <p className="text-xl font-bold text-gray-900">1</p>
-                                <p className="text-xs text-gray-500">Owner</p>
+                                <p className="mt-0.5 text-xs font-medium text-gray-500">Owner</p>
                             </div>
                         </div>
                     </div>
@@ -99,7 +111,7 @@ export default async function CompanyIDPage({ params }: { params: Promise<{ id: 
                     <p className="mb-4 text-gray-600">There was an error loading the company information.</p>
                     <Link
                         href="/company"
-                        className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.98]"
                     >
                         Back to Companies
                     </Link>

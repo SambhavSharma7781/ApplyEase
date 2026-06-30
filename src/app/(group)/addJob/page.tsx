@@ -35,13 +35,13 @@ export default function AddJobPage() {
           <div className="space-y-3">
             <Link
               href="/company"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.98]"
             >
               <Building2 size={16} /> Go to Companies
             </Link>
             <Link
               href="/"
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]"
             >
               <ArrowLeft size={16} /> Back to Home
             </Link>
@@ -202,7 +202,7 @@ export default function AddJobPage() {
                 <Button
                   type="submit"
                   disabled={loading || !jobTitle.trim() || !jobDescription.trim() || !jobLocation.trim() || !jobSalary.trim()}
-                  className="w-full gap-2"
+                  className="w-full gap-2 shadow-sm transition-all duration-200 active:scale-[0.99]"
                 >
                   {loading ? (
                     <>

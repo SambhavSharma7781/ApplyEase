@@ -46,10 +46,10 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
     return (
         <div className="w-full">
             {/* Tab header */}
-            <div className="mb-6 flex space-x-1 rounded-lg bg-gray-100 p-1">
+            <div className="mb-6 flex space-x-1 rounded-xl bg-gray-100/80 p-1">
                 <button
                     onClick={() => setActiveTab('jobs')}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 px-4 text-sm font-medium transition-colors ${
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-sm font-medium transition-all duration-200 ${
                         activeTab === 'jobs' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                     }`}
                 >
@@ -57,7 +57,7 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
                 </button>
                 <button
                     onClick={() => setActiveTab('reviews')}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 px-4 text-sm font-medium transition-colors ${
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2.5 px-4 text-sm font-medium transition-all duration-200 ${
                         activeTab === 'reviews' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'
                     }`}
                 >
@@ -73,7 +73,7 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
                     {company.jobs && company.jobs.length > 0 ? (
                         <div className="space-y-3">
                             {company.jobs.map((job) => (
-                                <div key={job.id} className="rounded-xl border border-gray-200 bg-gray-50 p-5 transition-colors hover:border-gray-300">
+                                <div key={job.id} className="rounded-xl border border-gray-200/80 bg-gray-50/80 p-5 transition-all duration-200 hover:border-gray-300 hover:shadow-sm">
                                     <h4 className="mb-1 text-base font-semibold text-gray-900">{job.title}</h4>
                                     <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-600">{job.description}</p>
                                     <Link
@@ -97,7 +97,7 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
             {activeTab === 'reviews' && (
                 <div className="space-y-6">
                     {/* Add review */}
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+                    <div className="rounded-xl border border-gray-200/80 bg-gray-50/60 p-5">
                         <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-gray-900">
                             <MessageSquare size={18} className="text-green-600" /> Share Your Experience
                         </h3>
@@ -106,12 +106,12 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
                             value={review}
                             onChange={(e) => setReview(e.target.value)}
                             rows={4}
-                            className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3.5 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all duration-200 focus:border-blue-400 focus:ring-[3px] focus:ring-blue-500/15"
                         />
                         <button
                             onClick={handleCreateReview}
                             disabled={!review.trim() || submitting}
-                            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             <Send size={14} />
                             {submitting ? "Submitting…" : "Submit Review"}
@@ -127,7 +127,7 @@ export default function CompanyReviewsAndJobsContainer({ company, reviews }: {
                         {reviewList.length > 0 ? (
                             <div className="space-y-4">
                                 {reviewList.map((r) => (
-                                    <div key={r.id} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                                    <div key={r.id} className="rounded-xl border border-gray-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md">
                                         <div className="mb-3 flex items-start justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">

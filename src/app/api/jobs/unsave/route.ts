@@ -26,8 +26,8 @@ export async function DELETE(request: NextRequest) {
             data: deletedSavedJob
         });
 
-    } catch (err: any) {
-        console.log(err.message);
+    } catch (error: unknown) {
+        console.log((error as Error).message);
         return NextResponse.json({
             success: false,
             data: {

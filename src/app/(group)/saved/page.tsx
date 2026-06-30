@@ -34,8 +34,14 @@ export default function Saved() {
 
         {savedJobs && savedJobs.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {savedJobs.map(job => (
-              <JobCard key={job.id} item={job} />
+            {savedJobs.map((job, idx) => (
+              <div 
+                key={job.id}
+                className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+                style={{ animationDelay: `${idx * 50}ms`, animationDuration: '400ms' }}
+              >
+                <JobCard item={job} />
+              </div>
             ))}
           </div>
         ) : (

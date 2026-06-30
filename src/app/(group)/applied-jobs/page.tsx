@@ -24,7 +24,7 @@ export default async function AppliedJobsPage() {
                             <p className="mb-6 text-gray-600">Please log in to view your job applications.</p>
                             <Link
                                 href="/login"
-                                className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-blue-700"
+                                className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-2.5 font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.98]"
                             >
                                 Sign In
                             </Link>
@@ -64,9 +64,15 @@ export default async function AppliedJobsPage() {
                         actionHref="/search"
                     />
                 ) : (
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {applications.map((application) => (
-                            <AppliedJobCard key={application.id} application={application} />
+                    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                        {applications.map((application, idx) => (
+                            <div 
+                                key={application.id}
+                                className="animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
+                                style={{ animationDelay: `${idx * 50}ms`, animationDuration: '400ms' }}
+                            >
+                                <AppliedJobCard application={application} />
+                            </div>
                         ))}
                     </div>
                 )}

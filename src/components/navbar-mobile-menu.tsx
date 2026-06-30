@@ -27,8 +27,10 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
         try {
             await fetch("/api/logout", { method: "POST", credentials: "include" });
         } finally {
-            router.push("/login");
             router.refresh();
+            setTimeout(() => {
+                router.push("/login");
+            }, 300);
         }
     }
 
@@ -45,9 +47,9 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
             <Link
                 href={href}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50/60 hover:text-blue-700 transition-colors duration-150 min-h-[44px]"
             >
-                <Icon className="h-4 w-4 text-gray-500" />
+                <Icon className="h-4.5 w-4.5 text-gray-500" />
                 {children}
             </Link>
         );
@@ -58,15 +60,15 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
             <SheetTrigger asChild>
                 <button
                     aria-label="Open navigation menu"
-                    className="rounded-md p-2 text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="rounded-lg p-2.5 text-gray-600 hover:bg-gray-100 transition-colors duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 >
                     <Menu className="h-5 w-5" />
                 </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-72 pt-6">
                 <SheetHeader className="px-1 pb-4">
-                    <SheetTitle className="flex items-center gap-2 text-base">
-                        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-600">
+                    <SheetTitle className="flex items-center gap-2.5 text-base">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
                             <Briefcase className="h-4 w-4 text-white" />
                         </div>
                         ApplyEase
@@ -78,10 +80,14 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
 
                 <Separator />
 
-                <nav className="flex flex-col gap-1 py-4">
+                <nav className="flex flex-col gap-0.5 py-4">
                     <NavLink href="/" icon={Briefcase}>Browse Jobs</NavLink>
-                    <NavLink href="/saved" icon={Bookmark}>Saved Jobs</NavLink>
-                    <NavLink href="/applied-jobs" icon={ClipboardList}>Applied Jobs</NavLink>
+                    {user?.role !== 'employer' && (
+                        <>
+                            <NavLink href="/saved" icon={Bookmark}>Saved Jobs</NavLink>
+                            <NavLink href="/applied-jobs" icon={ClipboardList}>Applied Jobs</NavLink>
+                        </>
+                    )}
 
                     {user?.company && (
                         <NavLink href={`/company/${user.company.id}`} icon={Building}>
@@ -98,9 +104,9 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
                 <div className="pt-4">
                     <button
                         onClick={handleLogout}
-                        className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150 min-h-[44px]"
                     >
-                        <LogOut className="h-4 w-4" />
+                        <LogOut className="h-4.5 w-4.5" />
                         Logout
                     </button>
                 </div>

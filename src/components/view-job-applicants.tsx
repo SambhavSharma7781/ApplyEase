@@ -61,7 +61,7 @@ export default function ViewJobApplicants({ job }: { job: Job }) {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.97]"
             >
                 <Eye size={16} />
                 View Applicants
@@ -71,7 +71,7 @@ export default function ViewJobApplicants({ job }: { job: Job }) {
                 <DialogContent className="max-w-md">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
                                 <Users size={16} className="text-blue-600" />
                             </div>
                             Job Applicants
@@ -92,7 +92,7 @@ export default function ViewJobApplicants({ job }: { job: Job }) {
                                 {applicants.map((application, index) => (
                                     <div
                                         key={application.id}
-                                        className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50 p-3"
+                                        className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/80 p-3.5 transition-colors duration-100 hover:bg-gray-100/80"
                                     >
                                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
                                             {application.user.email.charAt(0).toUpperCase()}

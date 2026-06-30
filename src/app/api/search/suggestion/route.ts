@@ -1,6 +1,6 @@
 import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { title } from "process";
+
 
 export async function GET(request: NextRequest) {
     const sp = request.nextUrl.searchParams;

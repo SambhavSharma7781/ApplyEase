@@ -17,13 +17,13 @@ const companyLinks = [
 
 export default function Footer() {
     return (
-        <footer className="bg-white border-t border-gray-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <footer className="bg-white border-t border-gray-200/80">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
                     {/* Brand */}
                     <div>
-                        <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 group-hover:bg-blue-700 transition-colors">
+                        <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 group-hover:from-blue-700 group-hover:to-blue-800 transition-all duration-200 shadow-sm">
                                 <Briefcase className="h-4 w-4 text-white" />
                             </div>
                             <span className="text-base font-bold text-gray-900">ApplyEase</span>
@@ -39,12 +39,12 @@ export default function Footer() {
                         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
                             For Job Seekers
                         </h3>
-                        <ul className="space-y-2.5">
+                        <ul className="space-y-3">
                             {jobSeekerLinks.map((link) => (
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
-                                        className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-150"
                                     >
                                         {link.label}
                                     </Link>
@@ -58,12 +58,12 @@ export default function Footer() {
                         <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
                             For Companies
                         </h3>
-                        <ul className="space-y-2.5">
+                        <ul className="space-y-3">
                             {companyLinks.map((link) => (
                                 <li key={link.label}>
                                     <Link
                                         href={link.href}
-                                        className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-150"
                                     >
                                         {link.label}
                                     </Link>
@@ -73,11 +73,11 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <Separator className="my-8" />
+                <Separator className="my-8 sm:my-10" />
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-                    <p>© {new Date().getFullYear()} ApplyEase. All rights reserved.</p>
-                    <p className="text-xs">Built with Next.js · Prisma · MongoDB</p>
+                    <p>© 2026 ApplyEase. All rights reserved.</p>
+                    <p className="text-xs">Built with 💙 and a lot of late nights!</p>
                 </div>
             </div>
         </footer>

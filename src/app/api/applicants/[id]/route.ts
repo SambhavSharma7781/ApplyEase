@@ -20,7 +20,7 @@ export async function GET(req: NextRequest , {params}){
             success: true,
             data: res
         })
-    } catch (err){
+    } catch (err) {
         console.log(err.message)
         return NextResponse.json({
             success: false,
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest , {params}){
 }
 
 export async function DELETE (req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const { id: jobId } = await params;
+    const { id } = await params;
 
     try {
         const res = await prismaClient.applications.delete({
@@ -51,7 +51,7 @@ export async function DELETE (req: NextRequest, { params }: { params: Promise<{ 
             success: true,
             data: res
         });
-    } catch(err){
+    } catch {
         return NextResponse.json({
             success: false,
             message: "Something went wrong"

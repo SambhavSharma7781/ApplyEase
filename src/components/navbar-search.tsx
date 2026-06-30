@@ -61,7 +61,7 @@ export default function NavbarSearch() {
     }
 
     return (
-        <div ref={containerRef} className="relative flex-1 max-w-md">
+        <div ref={containerRef} className="relative w-full max-w-md">
             <form onSubmit={handleSubmit}>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -71,27 +71,27 @@ export default function NavbarSearch() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onFocus={() => suggestions.length > 0 && setOpen(true)}
-                        className="pl-9 pr-4 h-9 bg-gray-50 border-gray-200 focus:bg-white text-sm"
+                        className="pl-9 pr-4 h-9 bg-gray-50/80 border-gray-200/80 hover:border-gray-300 focus:bg-white text-sm rounded-xl transition-all duration-200"
                         autoComplete="off"
                     />
                 </div>
             </form>
 
             {open && suggestions.length > 0 && (
-                <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden">
-                    <ul className="max-h-56 overflow-y-auto py-1">
+                <div className="absolute top-full mt-2 left-0 right-0 z-50 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
+                    <ul className="max-h-56 overflow-y-auto py-1.5">
                         {suggestions.map((s) => (
                             <li key={s.id}>
                                 <Link
                                     href={`/search?q=${encodeURIComponent(s.title)}`}
-                                    className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-gray-700 hover:bg-blue-50/60 hover:text-blue-700 transition-colors duration-100"
                                     onClick={() => {
                                         setQuery(s.title);
                                         setOpen(false);
                                     }}
                                 >
                                     <Search className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-                                    {s.title}
+                                    <span className="truncate">{s.title}</span>
                                 </Link>
                             </li>
                         ))}

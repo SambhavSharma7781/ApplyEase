@@ -27,7 +27,10 @@ export default function Signin() {
 
       if (data.success) {
         toast.success("Welcome back!")
-        router.push("/")
+        router.refresh()
+        setTimeout(() => {
+          router.push("/")
+        }, 300)
       } else {
         setError(data.message || "Login failed.")
       }
@@ -41,8 +44,13 @@ export default function Signin() {
   return (
     <div className="flex min-h-screen bg-white">
       {/* Left brand panel */}
-      <div className="hidden flex-col justify-between bg-gradient-to-br from-blue-600 to-blue-800 p-12 lg:flex lg:w-[45%]">
-        <div className="flex items-center gap-3">
+      <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-12 lg:flex lg:w-[45%]">
+        {/* Decorative background shapes */}
+        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-blue-800/40 blur-3xl"></div>
+        <div className="absolute left-1/2 top-1/2 h-full w-full -translate-y-1/2 bg-[radial-gradient(#ffffff33_1px,transparent_1px)] [background-size:24px_24px] opacity-20"></div>
+
+        <div className="relative z-10 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
             <Briefcase size={20} className="text-white" />
           </div>
@@ -56,12 +64,12 @@ export default function Signin() {
             Discover thousands of opportunities and take the next step in your professional life.
           </p>
         </div>
-        <p className="text-sm text-blue-200">© 2025 ApplyEase. All rights reserved.</p>
+        <p className="text-sm text-blue-200">© 2026 ApplyEase. All rights reserved.</p>
       </div>
 
       {/* Right form panel */}
       <div className="flex flex-1 items-center justify-center px-6 py-12 lg:px-12">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md animate-in fade-in-0 slide-in-from-bottom-4 duration-500 fill-mode-both">
           {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-2 lg:hidden">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
@@ -88,7 +96,7 @@ export default function Signin() {
                   required
                   autoComplete="email"
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-4 text-sm text-gray-900 outline-none placeholder:text-gray-400 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-4 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20"
                 />
               </div>
             </div>
@@ -107,7 +115,7 @@ export default function Signin() {
                   required
                   autoComplete="current-password"
                   placeholder="Enter your password"
-                  className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-10 text-sm text-gray-900 outline-none placeholder:text-gray-400 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-10 text-sm text-gray-900 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/20"
                 />
                 <button
                   type="button"
@@ -129,7 +137,7 @@ export default function Signin() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? <><Loader2 size={16} className="animate-spin" /> Signing in…</> : "Sign In"}
             </button>

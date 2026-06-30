@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
             data: newCompany
         });
 
-    } catch (error) {
+    } catch {
         return NextResponse.json({
             success: false,
             message: "Failed to create company"

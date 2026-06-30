@@ -1,8 +1,8 @@
 import { getUserFromCookies } from "@/helper";
 import prismaClient from "@/services/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     const user = await getUserFromCookies();
 
     if (!user) {
@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
             savedJobs: jobs
         });
 
-    } catch (err: any) {
-        console.log(err.message);
+    } catch (error: unknown) {
+        console.log((error as Error).message);
         return NextResponse.json({
             success: false,
             data: {

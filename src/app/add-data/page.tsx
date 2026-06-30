@@ -20,8 +20,7 @@ export default function AddDataPage() {
                 success: true,
                 message: "Data added successfully"
             }
-        }
-        catch (error) {
+        } catch {
             return {
                 success: false,
                 message: "Failed to add data"
