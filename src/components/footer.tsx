@@ -1,18 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { User } from "@/types/index";
+import { toast } from "sonner";
 
 const productLinks = [
   { label: "Browse Jobs", href: "/" },
   { label: "Search", href: "/search" },
   { label: "Saved Jobs", href: "/saved" },
   { label: "Applied Jobs", href: "/applied-jobs" },
-];
-
-const companyLinks = [
-  { label: "Post a Job", href: "/addJob" },
-  { label: "My Company", href: "/company" },
-  { label: "All Companies", href: "/search" },
 ];
 
 const resourceLinks = [
@@ -27,7 +25,7 @@ function FooterColumn({
   links,
 }: {
   heading: string;
-  links: { label: string; href: string }[];
+  links: { label: string; href: string; onClick?: (e: React.MouseEvent) => void }[];
 }) {
   return (
     <div>
@@ -39,6 +37,7 @@ function FooterColumn({
           <li key={link.label}>
             <Link
               href={link.href}
+              onClick={link.onClick}
               className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors duration-150"
             >
               {link.label}
@@ -50,7 +49,24 @@ function FooterColumn({
   );
 }
 
-export default function Footer() {
+export default function Footer({ user }: { user?: User | null }) {
+  const companyLinks = [
+    { label: "Post a Job", href: "/addJob" },
+    {
+      label: "My Company",
+      href: user?.company?.id ? `/company/${user.company.id}` : "#",
+      onClick: (e: React.MouseEvent) => {
+        if (!user?.company?.id) {
+          e.preventDefault();
+          toast("No company found", {
+            description: "You don't have a company yet. Create one to access your company dashboard."
+          });
+        }
+      }
+    },
+    { label: "All Companies", href: "/company" },
+  ];
+
   return (
     <footer className="bg-[#09090B] border-t border-white/[0.06]">
       <Container className="py-16 lg:py-20">

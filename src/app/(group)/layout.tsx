@@ -24,7 +24,7 @@ export default async function GroupLayout({
                     {children}
                 </div>
             </ClientProviders>
-            <Footer />
+            <Footer user={user} />
         </>
     );
 }
