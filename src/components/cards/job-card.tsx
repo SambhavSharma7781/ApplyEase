@@ -1,84 +1,113 @@
-'use client';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { JobWithCompany } from '@/types/index';
-import { MapPin, Building2, ArrowRight } from 'lucide-react';
-import SaveJobBtn from '../save-job-btn';
-import CompanyLogo from '../company-logo';
-import JobMetaBadges from '../job-meta-badges';
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MapPin, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { JobWithCompany } from "@/types/index";
+import { formatSalary } from "@/lib/format";
+import SaveJobBtn from "../save-job-btn";
+import CompanyLogo from "../company-logo";
+import JobMetaBadges from "../job-meta-badges";
 
 interface JobCardProps {
   item: JobWithCompany;
+  className?: string;
 }
 
-export default function JobCard({ item }: JobCardProps) {
+export default function JobCard({ item, className }: JobCardProps) {
   const router = useRouter();
+  const salaryLabel = formatSalary(item.salary);
 
   return (
-    <div 
+    <div
       onClick={() => router.push(`/job/${item.id}`)}
-      className="group relative flex h-full cursor-pointer flex-col rounded-2xl border border-transparent bg-white p-5 shadow-lg shadow-gray-200/40 transition-all duration-300 will-change-transform hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 sm:p-5"
+      className={cn(
+        "group relative flex flex-col h-full cursor-pointer",
+        "rounded-[14px] border border-[#E4E4E7] bg-white p-5",
+        "transition-all duration-200 ease-out",
+        "hover:border-[#C7C7CC] hover:-translate-y-[3px]",
+        className
+      )}
+      style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)" }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          "0 8px 24px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)";
+      }}
     >
-      {/* Header: company + save */}
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <CompanyLogo name={item.company.name} size="md" />
+      {/* ── Company header — light, supporting context ── */}
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <CompanyLogo name={item.company.name} size="sm" />
           <div className="min-w-0">
             <Link
               href={`/company/${item.company.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="block truncate font-semibold text-gray-900 transition-colors duration-150 hover:text-blue-600"
+              className="block truncate text-[13px] font-medium text-[#52525B] hover:text-[#4F46E5] transition-colors duration-150"
             >
               {item.company.name}
             </Link>
             {item.company.address && (
-              <div className="mt-0.5 flex items-center gap-1 text-sm text-gray-500">
-                <MapPin className="h-3.5 w-3.5 shrink-0" />
+              <div className="flex items-center gap-1 text-[12px] text-[#A1A1AA] mt-0.5">
+                <MapPin className="h-2.5 w-2.5 shrink-0" />
                 <span className="truncate">{item.company.address}</span>
               </div>
             )}
           </div>
         </div>
-        <div onClick={(e) => e.stopPropagation()}>
+        <div onClick={(e) => e.stopPropagation()} className="shrink-0">
           <SaveJobBtn job={item} />
         </div>
       </div>
 
-      {/* Title */}
-      <Link href={`/job/${item.id}`} onClick={(e) => e.stopPropagation()} className="mb-2 block mt-1">
-        <h3 className="line-clamp-2 text-[1.1rem] font-bold leading-snug text-gray-900 transition-colors duration-150 group-hover:text-indigo-600">
+      {/* ── Job title — dominant, most scannable ── */}
+      <Link
+        href={`/job/${item.id}`}
+        onClick={(e) => e.stopPropagation()}
+        className="mb-3 block"
+      >
+        <h3 className="text-[17px] font-bold leading-snug tracking-[-0.015em] text-[#09090B] group-hover:text-[#4F46E5] transition-colors duration-150 line-clamp-2">
           {item.title}
         </h3>
       </Link>
 
-      {/* Meta badges */}
+      {/* ── Salary — standalone, visually prominent ── */}
+      {salaryLabel && (
+        <div className="mb-3">
+          <span className="inline-flex items-center rounded-[6px] bg-[#F0FDF4] border border-[#BBF7D0] px-2.5 py-1 text-[13px] font-semibold text-[#15803D]">
+            {salaryLabel}
+          </span>
+        </div>
+      )}
+
+      {/* ── Work type / employment badges — secondary info ── */}
       <JobMetaBadges
         employmentType={item.employment_Type}
         jobType={item.job_type}
-        salary={item.salary}
-        className="mb-4"
+        className="mb-3"
       />
 
-      {/* Description */}
-      <p className="mb-4 line-clamp-2 flex-1 text-sm leading-relaxed text-gray-500">
+      {/* ── Description — tertiary, contextual ── */}
+      <p className="mb-4 flex-1 line-clamp-2 text-[13px] leading-relaxed text-[#A1A1AA]">
         {item.description}
       </p>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2 border-t border-gray-100 pt-3.5 mt-auto" onClick={(e) => e.stopPropagation()}>
+      {/* ── Footer CTA — intentional, button-like ── */}
+      <div
+        className="flex items-center justify-between border-t border-[#F0F0F0] pt-3.5 mt-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <span className="text-[12px] text-[#C0C0C8]">View opening</span>
         <Link
           href={`/job/${item.id}`}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-indigo-50 px-3 py-2.5 text-[13px] font-semibold text-indigo-700 transition-all duration-200 hover:bg-indigo-600 hover:text-white hover:shadow-md hover:shadow-indigo-500/25 active:scale-[0.97]"
+          className="inline-flex items-center gap-1.5 rounded-[8px] border border-[#E4E4E7] px-3.5 py-1.5 text-[13px] font-medium text-[#52525B] hover:border-[#4F46E5] hover:text-[#4F46E5] hover:bg-[#EEF2FF] transition-all duration-150 active:scale-[0.97]"
         >
-          View Details
+          View details
           <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-        <Link
-          href={`/company/${item.company.id}`}
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2.5 text-[13px] font-semibold text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.97]"
-        >
-          <Building2 className="h-4 w-4" />
-          <span className="hidden sm:inline">Company</span>
         </Link>
       </div>
     </div>

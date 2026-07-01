@@ -1,36 +1,48 @@
 import { cn } from "@/lib/utils";
-import { companyColor, initial } from "@/lib/format";
+import { initial } from "@/lib/format";
 
 type LogoSize = "sm" | "md" | "lg" | "xl";
 
 const SIZES: Record<LogoSize, string> = {
-    sm: "h-9 w-9 rounded-lg text-sm",
-    md: "h-11 w-11 rounded-xl text-base",
-    lg: "h-14 w-14 rounded-xl text-lg",
-    xl: "h-20 w-20 rounded-2xl text-3xl sm:h-24 sm:w-24",
+  sm: "h-8 w-8 rounded-[8px] text-xs",
+  md: "h-10 w-10 rounded-[10px] text-sm",
+  lg: "h-12 w-12 rounded-[10px] text-base",
+  xl: "h-16 w-16 rounded-[12px] text-xl sm:h-20 sm:w-20",
 };
 
 interface CompanyLogoProps {
-    name: string;
-    size?: LogoSize;
-    className?: string;
+  name: string;
+  size?: LogoSize;
+  className?: string;
 }
 
-/** Deterministic, colorful initials avatar for a company. Server-safe. */
-export default function CompanyLogo({ name, size = "md", className }: CompanyLogoProps) {
-    const { bg, ring } = companyColor(name);
-    return (
-        <div
-            className={cn(
-                "flex shrink-0 items-center justify-center font-semibold text-white ring-2",
-                bg,
-                ring,
-                SIZES[size],
-                className
-            )}
-            aria-hidden
-        >
-            {initial(name)}
-        </div>
-    );
+/**
+ * Company logo placeholder — neutral monogram.
+ *
+ * White background, zinc border, dark initial character.
+ * Intentionally plain: this is what a company looks like
+ * before they upload a real logo. Consistent and premium.
+ *
+ * The companyColor palette in format.ts is preserved for
+ * any other components that may use it.
+ */
+export default function CompanyLogo({
+  name,
+  size = "md",
+  className,
+}: CompanyLogoProps) {
+  return (
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center font-semibold",
+        "bg-white border border-[#E4E4E7] text-[#09090B]",
+        SIZES[size],
+        className
+      )}
+      style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.06)" }}
+      aria-hidden
+    >
+      {initial(name)}
+    </div>
+  );
 }

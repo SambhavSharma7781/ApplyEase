@@ -1,85 +1,94 @@
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Container } from "@/components/ui/container";
 
-const jobSeekerLinks = [
-    { label: "Browse Jobs", href: "/" },
-    { label: "Search", href: "/search" },
-    { label: "Saved Jobs", href: "/saved" },
-    { label: "Applied Jobs", href: "/applied-jobs" },
+const productLinks = [
+  { label: "Browse Jobs", href: "/" },
+  { label: "Search", href: "/search" },
+  { label: "Saved Jobs", href: "/saved" },
+  { label: "Applied Jobs", href: "/applied-jobs" },
 ];
 
 const companyLinks = [
-    { label: "Post a Job", href: "/addJob" },
-    { label: "My Company", href: "/company" },
-    { label: "All Companies", href: "/company" },
+  { label: "Post a Job", href: "/addJob" },
+  { label: "My Company", href: "/company" },
+  { label: "All Companies", href: "/company" },
 ];
 
+const resourceLinks = [
+  { label: "About", href: "#" },
+  { label: "Privacy", href: "#" },
+  { label: "Terms", href: "#" },
+  { label: "Contact", href: "#" },
+];
+
+function FooterColumn({
+  heading,
+  links,
+}: {
+  heading: string;
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <div>
+      <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-4">
+        {heading}
+      </h3>
+      <ul className="space-y-3">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link
+              href={link.href}
+              className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors duration-150"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function Footer() {
-    return (
-        <footer className="bg-white border-t border-gray-200/80">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-                    {/* Brand */}
-                    <div>
-                        <Link href="/" className="inline-flex items-center gap-2.5 mb-5 group">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 group-hover:from-blue-700 group-hover:to-blue-800 transition-all duration-200 shadow-sm">
-                                <Briefcase className="h-4 w-4 text-white" />
-                            </div>
-                            <span className="text-base font-bold text-gray-900">ApplyEase</span>
-                        </Link>
-                        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-                            The simplest way to find your next role. Discover opportunities from
-                            top companies and take the next step in your career.
-                        </p>
-                    </div>
+  return (
+    <footer className="bg-[#09090B] border-t border-white/[0.06]">
+      <Container className="py-14 lg:py-16">
+        {/* Main grid */}
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4 lg:gap-16">
+          {/* Brand column */}
+          <div className="col-span-2 md:col-span-1">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 mb-4 group"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#4F46E5] group-hover:bg-[#4338CA] transition-colors duration-150">
+                <Briefcase className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-sm font-semibold text-white">
+                ApplyEase
+              </span>
+            </Link>
+            <p className="text-sm text-zinc-500 leading-relaxed max-w-[220px]">
+              The straightforward way to find your next role.
+            </p>
+          </div>
 
-                    {/* For Job Seekers */}
-                    <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                            For Job Seekers
-                        </h3>
-                        <ul className="space-y-3">
-                            {jobSeekerLinks.map((link) => (
-                                <li key={link.label}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-150"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+          <FooterColumn heading="Product" links={productLinks} />
+          <FooterColumn heading="Companies" links={companyLinks} />
+          <FooterColumn heading="Resources" links={resourceLinks} />
+        </div>
 
-                    {/* For Companies */}
-                    <div>
-                        <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
-                            For Companies
-                        </h3>
-                        <ul className="space-y-3">
-                            {companyLinks.map((link) => (
-                                <li key={link.label}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-150"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                <Separator className="my-8 sm:my-10" />
-
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
-                    <p>© 2026 ApplyEase. All rights reserved.</p>
-                    <p className="text-xs">Built with 💙 and a lot of late nights!</p>
-                </div>
-            </div>
-        </footer>
-    );
+        {/* Bottom bar */}
+        <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
+          <p>© {new Date().getFullYear()} ApplyEase. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Privacy</Link>
+            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Terms</Link>
+            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Contact</Link>
+          </div>
+        </div>
+      </Container>
+    </footer>
+  );
 }

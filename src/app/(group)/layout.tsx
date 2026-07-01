@@ -20,9 +20,9 @@ export default async function GroupLayout({
         <>
             <Navbar user={user} />
             <ClientProviders initialUser={user}>
-                <main className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-gray-50/50 to-gray-100/30">
+                <div className="min-h-[calc(100vh-4rem)] bg-[#F7F7F8]">
                     {children}
-                </main>
+                </div>
             </ClientProviders>
             <Footer />
         </>

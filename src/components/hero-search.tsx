@@ -4,16 +4,17 @@ import { useJobSearch } from "@/hooks/use-job-search";
 import SearchInput from "@/components/search-input";
 
 /**
- * Navbar search — compact (36px), no submit button.
+ * Hero search — expanded (52px), with a submit button.
  * Thin wrapper: no logic, only visual configuration.
  */
-export default function NavbarSearch() {
+export default function HeroSearch() {
   const search = useJobSearch();
   return (
     <SearchInput
       {...search}
-      size="sm"
-      placeholder="Search jobs, companies..."
+      size="lg"
+      showButton
+      placeholder="Job title, company, or keyword..."
     />
   );
 }
