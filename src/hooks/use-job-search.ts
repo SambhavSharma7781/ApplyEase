@@ -18,15 +18,24 @@ export interface UseJobSearchReturn {
   handleSubmit: (e: React.FormEvent) => void;
 }
 
+export interface UseJobSearchOptions {
+  /** Pre-populate the search input on mount. */
+  initialQuery?: string;
+  /** Override the default navigation to /search?q=... on submit. */
+  onSubmit?: (query: string) => void;
+}
+
 /**
  * Shared search logic — single source of truth for job search behavior.
  *
- * Used by both NavbarSearch (compact) and HeroSearch (expanded).
+ * Used by NavbarSearch (compact), HeroSearch (expanded), and InPageSearch.
  * Handles: query state, debounced suggestion fetch, click-outside,
  * and form submission navigation.
+ *
+ * Options are optional — existing callers with no arguments are unaffected.
  */
-export function useJobSearch(): UseJobSearchReturn {
-  const [query, setQuery] = useState("");
+export function useJobSearch(options?: UseJobSearchOptions): UseJobSearchReturn {
+  const [query, setQuery] = useState(options?.initialQuery ?? "");
   const [suggestions, setSuggestions] = useState<JobSuggestion[]>([]);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -79,7 +88,11 @@ export function useJobSearch(): UseJobSearchReturn {
     e.preventDefault();
     if (query.trim()) {
       setOpen(false);
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      if (options?.onSubmit) {
+        options.onSubmit(query.trim());
+      } else {
+        router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      }
     }
   }
 

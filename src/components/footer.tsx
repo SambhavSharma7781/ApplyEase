@@ -12,7 +12,7 @@ const productLinks = [
 const companyLinks = [
   { label: "Post a Job", href: "/addJob" },
   { label: "My Company", href: "/company" },
-  { label: "All Companies", href: "/company" },
+  { label: "All Companies", href: "/search" },
 ];
 
 const resourceLinks = [
@@ -53,7 +53,7 @@ function FooterColumn({
 export default function Footer() {
   return (
     <footer className="bg-[#09090B] border-t border-white/[0.06]">
-      <Container className="py-14 lg:py-16">
+      <Container className="py-16 lg:py-20">
         {/* Main grid */}
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4 lg:gap-16">
           {/* Brand column */}
@@ -70,7 +70,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-zinc-500 leading-relaxed max-w-[220px]">
-              The straightforward way to find your next role.
+              Where your next role begins.
             </p>
           </div>
 
@@ -79,14 +79,11 @@ export default function Footer() {
           <FooterColumn heading="Resources" links={resourceLinks} />
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
-          <p>© {new Date().getFullYear()} ApplyEase. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Privacy</Link>
-            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Terms</Link>
-            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Contact</Link>
-          </div>
+        {/* Bottom bar — copyright only, links live in columns above */}
+        <div className="mt-14 pt-8 border-t border-white/[0.06]">
+          <p className="text-xs text-zinc-600">
+            © {new Date().getFullYear()} ApplyEase. All rights reserved.
+          </p>
         </div>
       </Container>
     </footer>

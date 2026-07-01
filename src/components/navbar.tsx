@@ -73,10 +73,12 @@ export default function Navbar({ user }: NavbarProps) {
             </Link>
           </div>
 
-          {/* ── Search — center, capped to avoid stretching on large screens ── */}
-          <div className="flex-1 flex justify-center max-w-[380px] sm:max-w-[440px]">
-            <NavbarSearch />
-          </div>
+          {/* ── Search — hidden on /search (in-page bar takes over) ── */}
+          {!pathname.startsWith('/search') && (
+            <div className="flex-1 flex justify-center max-w-[380px] sm:max-w-[440px]">
+              <NavbarSearch />
+            </div>
+          )}
 
           {/* ── Right actions ── */}
           <div className="flex items-center gap-1 shrink-0">
@@ -117,7 +119,7 @@ export default function Navbar({ user }: NavbarProps) {
                   <Button
                     size="sm"
                     asChild
-                    className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-[13px] font-medium rounded-[8px] shadow-none"
+                    className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-[13px] font-medium rounded-[8px] shadow-sm"
                   >
                     <Link href="/addJob" className="gap-1.5">
                       <Plus className="h-3.5 w-3.5" />

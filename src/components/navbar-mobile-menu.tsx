@@ -47,7 +47,7 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
             <Link
                 href={href}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50/60 hover:text-blue-700 transition-colors duration-150 min-h-[44px]"
+                className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-gray-700 hover:bg-[#EEF2FF]/60 hover:text-[#4F46E5] transition-colors duration-150 min-h-[44px]"
             >
                 <Icon className="h-4.5 w-4.5 text-gray-500" />
                 {children}
@@ -68,7 +68,7 @@ export default function NavbarMobileMenu({ user }: NavbarMobileMenuProps) {
             <SheetContent side="right" className="w-72 pt-6">
                 <SheetHeader className="px-1 pb-4">
                     <SheetTitle className="flex items-center gap-2.5 text-base">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#4F46E5]">
                             <Briefcase className="h-4 w-4 text-white" />
                         </div>
                         ApplyEase

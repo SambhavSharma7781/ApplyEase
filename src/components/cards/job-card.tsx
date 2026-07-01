@@ -26,13 +26,13 @@ export default function JobCard({ item, className }: JobCardProps) {
         "group relative flex flex-col h-full cursor-pointer",
         "rounded-[14px] border border-[#E4E4E7] bg-white p-5",
         "transition-all duration-200 ease-out",
-        "hover:border-[#C7C7CC] hover:-translate-y-[3px]",
+        "hover:border-[#C4B5FD] hover:-translate-y-1",
         className
       )}
       style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)" }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLDivElement).style.boxShadow =
-          "0 8px 24px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05)";
+          "0 20px 48px rgba(79,70,229,0.08), 0 4px 8px rgba(0,0,0,0.06)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLDivElement).style.boxShadow =
@@ -47,7 +47,7 @@ export default function JobCard({ item, className }: JobCardProps) {
             <Link
               href={`/company/${item.company.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="block truncate text-[13px] font-medium text-[#52525B] hover:text-[#4F46E5] transition-colors duration-150"
+              className="block truncate text-[12px] font-medium text-[#71717A] hover:text-[#4F46E5] transition-colors duration-150"
             >
               {item.company.name}
             </Link>
@@ -70,7 +70,7 @@ export default function JobCard({ item, className }: JobCardProps) {
         onClick={(e) => e.stopPropagation()}
         className="mb-3 block"
       >
-        <h3 className="text-[17px] font-bold leading-snug tracking-[-0.015em] text-[#09090B] group-hover:text-[#4F46E5] transition-colors duration-150 line-clamp-2">
+        <h3 className="text-[17px] font-bold leading-snug tracking-[-0.02em] text-[#09090B] group-hover:text-[#4F46E5] transition-colors duration-150 line-clamp-2">
           {item.title}
         </h3>
       </Link>
@@ -92,19 +92,18 @@ export default function JobCard({ item, className }: JobCardProps) {
       />
 
       {/* ── Description — tertiary, contextual ── */}
-      <p className="mb-4 flex-1 line-clamp-2 text-[13px] leading-relaxed text-[#A1A1AA]">
+      <p className="mb-4 flex-1 line-clamp-2 text-[13px] leading-relaxed text-[#71717A]">
         {item.description}
       </p>
 
       {/* ── Footer CTA — intentional, button-like ── */}
       <div
-        className="flex items-center justify-between border-t border-[#F0F0F0] pt-3.5 mt-auto"
+        className="flex items-center justify-end border-t border-[#F0F0F0] pt-3.5 mt-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <span className="text-[12px] text-[#C0C0C8]">View opening</span>
         <Link
           href={`/job/${item.id}`}
-          className="inline-flex items-center gap-1.5 rounded-[8px] border border-[#E4E4E7] px-3.5 py-1.5 text-[13px] font-medium text-[#52525B] hover:border-[#4F46E5] hover:text-[#4F46E5] hover:bg-[#EEF2FF] transition-all duration-150 active:scale-[0.97]"
+          className="inline-flex items-center gap-1.5 rounded-[8px] border border-[#E4E4E7] bg-[#F7F7F8] px-3.5 py-1.5 text-[13px] font-medium text-[#52525B] hover:border-[#4F46E5] hover:bg-[#EEF2FF] hover:text-[#4F46E5] group-hover:border-[#4F46E5] group-hover:bg-[#EEF2FF] group-hover:text-[#4F46E5] transition-all duration-150 active:scale-[0.97]"
         >
           View details
           <ArrowRight className="h-3.5 w-3.5" />

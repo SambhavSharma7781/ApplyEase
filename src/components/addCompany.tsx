@@ -58,9 +58,9 @@ export default function AddCompany() {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-blue-700 active:scale-[0.97]"
+                className="inline-flex items-center gap-1.5 rounded-[8px] bg-[#4F46E5] px-4 py-2 text-[13px] font-medium text-white shadow-sm transition-all duration-150 hover:bg-[#4338CA] active:scale-[0.97]"
             >
-                <Plus size={16} />
+                <Plus size={15} />
                 Add Company
             </button>
 
@@ -68,8 +68,8 @@ export default function AddCompany() {
                 <DialogContent className="max-w-md">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
-                                <Building2 size={16} className="text-blue-600" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEF2FF]">
+                                <Building2 size={16} className="text-[#4F46E5]" />
                             </div>
                             Add Company
                         </DialogTitle>
