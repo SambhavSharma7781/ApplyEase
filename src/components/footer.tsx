@@ -16,10 +16,10 @@ const companyLinks = [
 ];
 
 const resourceLinks = [
-  { label: "About", href: "#" },
-  { label: "Privacy", href: "#" },
-  { label: "Terms", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "About", href: "/about" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+  { label: "Contact", href: "/contact" },
 ];
 
 function FooterColumn({
